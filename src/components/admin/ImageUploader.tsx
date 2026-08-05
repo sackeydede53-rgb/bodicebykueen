@@ -23,9 +23,20 @@ export function ImageUploader({ name = "imageUrls", defaultUrls = [] }: Props) {
         const form = new FormData();
         form.append("file", file);
         const res = await fetch("/api/uploads", { method: "POST", body: form });
-        const data = await res.json();
+        const text = await res.text();
+        let data: { url?: string; error?: string } = {};
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          throw new Error(
+            res.ok
+              ? "Upload returned an invalid response"
+              : "Upload failed on the server. Enable Vercel Blob storage, then redeploy.",
+          );
+        }
         if (!res.ok) throw new Error(data.error || "Upload failed");
-        uploaded.push(data.url as string);
+        if (!data.url) throw new Error("Upload did not return an image URL");
+        uploaded.push(data.url);
       }
       setUrls((prev) => [...prev, ...uploaded]);
     } catch (err) {
@@ -63,7 +74,8 @@ export function ImageUploader({ name = "imageUrls", defaultUrls = [] }: Props) {
       </button>
 
       <p className="text-xs text-[#8a8174]">
-        JPG, PNG, or WebP. You can select multiple files.
+        JPG, PNG, or WebP. You can select multiple files. On Vercel, keep each
+        file under about 4.5&nbsp;MB.
       </p>
 
       {error && <p className="text-sm text-danger">{error}</p>}

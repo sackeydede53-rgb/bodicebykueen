@@ -66,7 +66,7 @@ npm run db:seed
 
 5. Redeploy on Vercel (or push to GitHub if auto-deploy is on).
 
-**Note:** Product image uploads under `public/uploads` are ephemeral on Vercel. Prefer remote image URLs (or add Blob/Cloudinary later) for production images.
+**Image uploads on Vercel:** Create a Blob store in **Vercel → Storage → Create Database/Store → Blob**, connect it to this project (adds `BLOB_READ_WRITE_TOKEN`), then redeploy. Local uploads still use `public/uploads`.
 
 ## Features
 
