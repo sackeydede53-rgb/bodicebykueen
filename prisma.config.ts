@@ -9,6 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
+    // Prisma CLI migrate/db push targets local SQLite.
+    // Production Turso schema is applied via: npm run db:push:turso
     url: process.env["DATABASE_URL"],
   },
 });

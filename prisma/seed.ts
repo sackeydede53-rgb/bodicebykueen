@@ -1,16 +1,10 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import path from "path";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { getLibSqlConfig } from "../src/lib/libsql";
 
-const dbUrl = process.env.DATABASE_URL ?? "file:./dev.db";
-const dbPath = dbUrl.replace(/^file:/, "").replace(/^\.\//, "");
-const resolved = path.isAbsolute(dbPath)
-  ? dbPath
-  : path.join(process.cwd(), dbPath);
-
-const adapter = new PrismaBetterSqlite3({ url: resolved });
+const adapter = new PrismaLibSql(getLibSqlConfig());
 const prisma = new PrismaClient({ adapter });
 
 async function upsertCategory(
