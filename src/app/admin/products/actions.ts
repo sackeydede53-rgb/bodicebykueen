@@ -1,0 +1,162 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/admin";
+import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/utils";
+
+export async function createProduct(formData: FormData) {
+  await requireAdmin();
+
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const categoryId = String(formData.get("categoryId") || "") || null;
+  const availability = String(formData.get("availability") || "AVAILABLE") as
+    | "AVAILABLE"
+    | "IN_STOCK"
+    | "PREORDER";
+  const preorderEta = String(formData.get("preorderEta") || "") || null;
+  const featured = formData.get("featured") === "on";
+  const published = formData.get("published") === "on";
+  const imageUrls = String(formData.get("imageUrls") || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const sizes = String(formData.get("sizes") || "S,M,L")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const colors = String(formData.get("colors") || "Default")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const stock = Number(formData.get("stock") || 0);
+
+  if (!name || !description || !price) {
+    throw new Error("Name, description, and price are required");
+  }
+
+  let slug = slugify(name);
+  const existing = await prisma.product.findUnique({ where: { slug } });
+  if (existing) slug = `${slug}-${Date.now().toString(36)}`;
+
+  const product = await prisma.product.create({
+    data: {
+      name,
+      slug,
+      description,
+      price,
+      categoryId,
+      availability,
+      preorderEta: availability === "PREORDER" ? preorderEta : null,
+      featured,
+      published,
+      images: {
+        create: imageUrls.map((url, i) => ({
+          url,
+          alt: name,
+          sortOrder: i,
+        })),
+      },
+      variants: {
+        create: colors.flatMap((color) =>
+          sizes.map((size) => ({
+            size,
+            color,
+            stock: availability === "PREORDER" ? 0 : stock,
+          })),
+        ),
+      },
+    },
+  });
+
+  revalidatePath("/admin/products");
+  revalidatePath("/shop");
+  redirect(`/admin/products/${product.id}`);
+}
+
+export async function updateProduct(productId: string, formData: FormData) {
+  await requireAdmin();
+
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const categoryId = String(formData.get("categoryId") || "") || null;
+  const availability = String(formData.get("availability") || "AVAILABLE") as
+    | "AVAILABLE"
+    | "IN_STOCK"
+    | "PREORDER";
+  const preorderEta = String(formData.get("preorderEta") || "") || null;
+  const featured = formData.get("featured") === "on";
+  const published = formData.get("published") === "on";
+  const imageUrls = String(formData.get("imageUrls") || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: {
+      name,
+      description,
+      price,
+      categoryId,
+      availability,
+      preorderEta: availability === "PREORDER" ? preorderEta : null,
+      featured,
+      published,
+    },
+  });
+
+  await prisma.productImage.deleteMany({ where: { productId } });
+  if (imageUrls.length) {
+    await prisma.productImage.createMany({
+      data: imageUrls.map((url, i) => ({
+        productId,
+        url,
+        alt: name,
+        sortOrder: i,
+      })),
+    });
+  }
+
+  revalidatePath("/admin/products");
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/shop");
+  redirect(`/admin/products/${productId}`);
+}
+
+export async function deleteProduct(productId: string) {
+  await requireAdmin();
+  await prisma.product.delete({ where: { id: productId } });
+  revalidatePath("/admin/products");
+  revalidatePath("/shop");
+  redirect("/admin/products");
+}
+
+export async function updateVariantStock(formData: FormData) {
+  await requireAdmin();
+  const variantId = String(formData.get("variantId"));
+  const stock = Number(formData.get("stock") || 0);
+  const variant = await prisma.productVariant.update({
+    where: { id: variantId },
+    data: { stock },
+  });
+  revalidatePath(`/admin/products/${variant.productId}`);
+}
+
+export async function addVariant(formData: FormData) {
+  await requireAdmin();
+  const productId = String(formData.get("productId"));
+  const size = String(formData.get("size") || "").trim();
+  const color = String(formData.get("color") || "Default").trim();
+  const stock = Number(formData.get("stock") || 0);
+  if (!size) return;
+
+  await prisma.productVariant.create({
+    data: { productId, size, color, stock },
+  });
+  revalidatePath(`/admin/products/${productId}`);
+}
