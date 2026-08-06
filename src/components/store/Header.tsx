@@ -65,11 +65,11 @@ export function Header() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <ThemeToggle />
           <Link
             href="/shop"
-            className="text-[0.66rem] uppercase tracking-[0.22em] text-ivory/75 transition hover:text-champagne md:hidden"
+            className="hidden text-[0.66rem] uppercase tracking-[0.22em] text-ivory/75 transition hover:text-champagne min-[400px]:inline md:hidden"
           >
             Shop
           </Link>

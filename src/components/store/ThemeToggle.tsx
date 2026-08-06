@@ -9,7 +9,7 @@ function EyeOpenIcon({ className }: { className?: string }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
@@ -27,7 +27,7 @@ function EyeClosedIcon({ className }: { className?: string }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
@@ -50,18 +50,18 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Switch to light mood" : "Switch to dark mood"}
-      className="inline-flex items-center gap-1.5 border border-label/50 bg-ink px-2.5 py-1.5 text-label shadow-sm transition hover:border-label hover:bg-ink-soft md:gap-2 md:px-3"
+      className="inline-flex min-h-9 items-center gap-1.5 border border-champagne bg-champagne px-2.5 py-1.5 text-[var(--on-accent)] shadow-sm transition hover:bg-champagne-deep sm:gap-2 sm:px-3"
     >
       {isDark ? (
         <EyeClosedIcon className="h-4 w-4 shrink-0" />
       ) : (
         <EyeOpenIcon className="h-4 w-4 shrink-0" />
       )}
-      <span className="text-[0.62rem] uppercase tracking-[0.14em]">
+      <span className="text-[0.65rem] font-medium uppercase tracking-[0.12em]">
         {isDark ? "Dark" : "Light"}
       </span>
-      <span className="text-[0.58rem] uppercase tracking-[0.12em] opacity-80">
-        · Mood
+      <span className="text-[0.65rem] font-medium uppercase tracking-[0.12em]">
+        Mood
       </span>
     </button>
   );
