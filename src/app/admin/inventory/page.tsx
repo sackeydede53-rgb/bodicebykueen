@@ -16,8 +16,6 @@ import { InventoryProductCard } from "@/components/admin/InventoryProductCard";
 
 export const dynamic = "force-dynamic";
 
-const PAID_STATUSES = ["PAID", "PROCESSING", "SHIPPED", "DELIVERED"] as const;
-
 type Props = {
   searchParams: Promise<{
     ok?: string;
@@ -32,7 +30,7 @@ export default async function InventoryPage({ searchParams }: Props) {
   const params = await searchParams;
   const view = params.view || "all";
 
-  const [products, expenses, paidOrders] = await Promise.all([
+  const [products, expenses] = await Promise.all([
     prisma.product.findMany({
       include: {
         category: true,
@@ -45,15 +43,10 @@ export default async function InventoryPage({ searchParams }: Props) {
       orderBy: { spentAt: "desc" },
       take: 30,
     }),
-    prisma.order.findMany({
-      where: { status: { in: [...PAID_STATUSES] } },
-      include: { items: true },
-    }),
   ]);
 
   let unitsInStock = 0;
   let inventoryCost = 0;
-  let inventoryRetail = 0;
   let missingCostCount = 0;
 
   const rows = products.map((product) => {
@@ -62,14 +55,12 @@ export default async function InventoryPage({ searchParams }: Props) {
     const cost = product.costPrice || 0;
     const sell = product.price || 0;
     const costValue = isPreorder ? 0 : stock * cost;
-    const retailValue = isPreorder ? 0 : stock * sell;
     const health = stockHealth(stock, isPreorder);
     const needsCost = !isPreorder && cost <= 0 && stock > 0;
 
     if (!isPreorder) {
       unitsInStock += stock;
       inventoryCost += costValue;
-      inventoryRetail += retailValue;
       if (needsCost) missingCostCount += 1;
     }
 
@@ -79,25 +70,12 @@ export default async function InventoryPage({ searchParams }: Props) {
       cost,
       sell,
       costValue,
-      retailValue,
-      potential: retailValue - costValue,
       health,
       isPreorder,
       needsCost,
     };
   });
 
-  const potentialProfit = inventoryRetail - inventoryCost;
-
-  let salesRevenue = 0;
-  let salesCogs = 0;
-  for (const order of paidOrders) {
-    salesRevenue += order.total;
-    for (const item of order.items) {
-      salesCogs += (item.unitCost || 0) * item.quantity;
-    }
-  }
-  const realizedGross = salesRevenue - salesCogs;
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   const filtered = rows.filter((row) => {
@@ -177,34 +155,19 @@ export default async function InventoryPage({ searchParams }: Props) {
         </p>
       )}
 
-      {/* Compact money strip — totals only; edit prices on each product below */}
-      <section className="space-y-3">
-        <div className="grid gap-3 sm:grid-cols-3">
-          <MoneyChip
-            step="1"
-            label="Money in stock"
-            value={formatGhs(inventoryCost)}
-            hint={`${unitsInStock} pieces × what you paid (cost)`}
-          />
-          <MoneyChip
-            step="2"
-            label="If all sell"
-            value={formatGhs(inventoryRetail)}
-            hint="Stock × each product’s sell price (not typed here)"
-          />
-          <MoneyChip
-            step="3"
-            label="Profit waiting"
-            value={formatGhs(potentialProfit)}
-            hint={`Step 2 − step 1 · sales so far ${formatGhs(realizedGross - totalExpenses)}`}
-            accent
-          />
-        </div>
-        <p className="rounded-xl border border-[#e8d5d8] bg-white px-4 py-3 text-sm text-[#6f6f6f]">
-          These three numbers update themselves. To change the sell amount,
-          pick a product below and edit <strong className="text-[#3a3a3a]">Sell price</strong>,
-          then press <strong className="text-[#3a3a3a]">Save changes</strong>.
-        </p>
+      {/* Simple stock money — no “if all sell” / projected profit */}
+      <section className="grid gap-3 sm:grid-cols-2">
+        <MoneyChip
+          label="Money in stock"
+          value={formatGhs(inventoryCost)}
+          hint={`${unitsInStock} pieces × what you paid (cost)`}
+          accent
+        />
+        <MoneyChip
+          label="Extra spent on goods"
+          value={formatGhs(totalExpenses)}
+          hint="Fabric, packaging, supplier trips (log below)"
+        />
       </section>
 
       {missingCostCount > 0 && (
@@ -487,13 +450,11 @@ export default async function InventoryPage({ searchParams }: Props) {
 }
 
 function MoneyChip({
-  step,
   label,
   value,
   hint,
   accent = false,
 }: {
-  step: string;
   label: string;
   value: string;
   hint: string;
@@ -508,7 +469,7 @@ function MoneyChip({
       }`}
     >
       <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#6b3f48]">
-        {step} · {label}
+        {label}
       </p>
       <p className="mt-1 font-[family-name:var(--font-display)] text-3xl">
         {value}

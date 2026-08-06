@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { formatGhs } from "@/lib/utils";
-import { marginPercent } from "@/lib/inventory";
 import { saveInventoryProduct } from "@/app/admin/inventory/actions";
 
 type Variant = {
@@ -36,11 +35,7 @@ export function InventoryProductCard({
   justSaved = false,
 }: Props) {
   const stock = variants.reduce((sum, v) => sum + v.stock, 0);
-  const profitEach = Math.max(0, sellPrice - costPrice);
   const moneyIn = isPreorder ? 0 : stock * costPrice;
-  const ifSoldAll = isPreorder ? 0 : stock * sellPrice;
-  const profitAll = ifSoldAll - moneyIn;
-  const margin = marginPercent(sellPrice, costPrice);
 
   const byColor = new Map<string, Variant[]>();
   for (const v of variants) {
@@ -128,34 +123,19 @@ export function InventoryProductCard({
             </label>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          {!isPreorder && (
             <div className="rounded-xl border border-[#d0d0d0] px-3 py-3">
               <p className="text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
-                Profit on 1 piece
+                Money in this style
               </p>
-              <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#3d5a45]">
-                {formatGhs(profitEach)}
-              </p>
-              <p className="mt-1 text-[0.65rem] text-[#6f6f6f]">
-                {costPrice > 0
-                  ? `${margin.toFixed(0)}% margin`
-                  : "Add cost to see real profit"}
-              </p>
-            </div>
-            <div className="rounded-xl border border-[#d0d0d0] px-3 py-3">
-              <p className="text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
-                If all stock sells
-              </p>
-              <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#3d5a45]">
-                {isPreorder ? "—" : formatGhs(profitAll)}
+              <p className="mt-1 font-[family-name:var(--font-display)] text-2xl">
+                {formatGhs(moneyIn)}
               </p>
               <p className="mt-1 text-[0.65rem] text-[#6f6f6f]">
-                {isPreorder
-                  ? "Pre-order item"
-                  : `In: ${formatGhs(moneyIn)} · Out: ${formatGhs(ifSoldAll)}`}
+                {stock} pieces × cost {formatGhs(costPrice)}
               </p>
             </div>
-          </div>
+          )}
 
           {!isPreorder && (
             <div>
@@ -213,8 +193,8 @@ export function InventoryProductCard({
               Save changes
             </button>
             <p className="text-xs text-[#6f6f6f]">
-              Paid {formatGhs(costPrice)} → sell {formatGhs(sellPrice)} → keep{" "}
-              {formatGhs(profitEach)}
+              Cost {formatGhs(costPrice)} · sell {formatGhs(sellPrice)} ·{" "}
+              {stock} in stock
             </p>
           </div>
         </div>
