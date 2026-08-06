@@ -85,14 +85,19 @@ export default function CartPage() {
             </div>
           ))}
 
-          <div className="flex flex-col items-end gap-4 pt-4">
+          <div className="flex flex-col items-stretch gap-3 pt-4 sm:items-end">
             <p className="text-lg text-ivory">
               Subtotal{" "}
               <span className="text-champagne">{formatGhs(subtotal)}</span>
             </p>
-            <Link href="/checkout" className="btn-primary">
-              Checkout
-            </Link>
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+              <Link href="/shop" className="btn-ghost w-full sm:w-auto">
+                Continue shopping
+              </Link>
+              <Link href="/checkout" className="btn-primary w-full sm:w-auto">
+                Proceed to payment
+              </Link>
+            </div>
           </div>
         </div>
       )}

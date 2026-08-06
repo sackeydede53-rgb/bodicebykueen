@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { getColorHex } from "@/lib/colors";
@@ -40,7 +41,7 @@ export function AddToCartForm({
   const [color, setColor] = useState(colors[0] ?? "Black");
   const sizesForColor = variants.filter((v) => v.color === color);
   const [size, setSize] = useState(sizesForColor[0]?.size ?? "");
-  const [message, setMessage] = useState("");
+  const [added, setAdded] = useState(false);
 
   const selected =
     variants.find((v) => v.color === color && v.size === size) ??
@@ -62,8 +63,7 @@ export function AddToCartForm({
       isPreorder,
       preorderEta,
     });
-    setMessage("Added to cart");
-    setTimeout(() => setMessage(""), 2000);
+    setAdded(true);
   }
 
   return (
@@ -82,6 +82,7 @@ export function AddToCartForm({
                     setColor(c);
                     const next = variants.find((v) => v.color === c);
                     if (next) setSize(next.size);
+                    setAdded(false);
                   }}
                   className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] ${
                     color === c
@@ -114,7 +115,10 @@ export function AddToCartForm({
                 key={v.id}
                 type="button"
                 disabled={disabled}
-                onClick={() => setSize(v.size)}
+                onClick={() => {
+                  setSize(v.size);
+                  setAdded(false);
+                }}
                 className={`min-w-12 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] disabled:opacity-30 ${
                   size === v.size
                     ? "border-champagne bg-champagne text-[var(--on-accent)]"
@@ -128,17 +132,34 @@ export function AddToCartForm({
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={handleAdd}
-        disabled={!canPurchase}
-        className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {isPreorder ? "Pre-order" : "Add to cart"}
-      </button>
-      {message && (
-        <p className="text-center text-sm text-champagne">{message}</p>
+      {!added ? (
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={!canPurchase}
+          className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {isPreorder ? "Pre-order" : "Add to cart"}
+        </button>
+      ) : (
+        <div className="space-y-3 rounded-2xl border border-champagne/25 bg-ink-soft/40 p-4">
+          <p className="text-center text-sm text-ivory">Added to cart</p>
+          <Link href="/checkout" className="btn-primary w-full">
+            Proceed to payment
+          </Link>
+          <Link href="/shop" className="btn-ghost w-full">
+            Continue shopping
+          </Link>
+          <button
+            type="button"
+            onClick={() => setAdded(false)}
+            className="w-full text-center text-[0.65rem] uppercase tracking-[0.14em] text-label"
+          >
+            Add another
+          </button>
+        </div>
       )}
+
       {!canPurchase && (
         <p className="text-center text-sm text-stone">Currently unavailable</p>
       )}
