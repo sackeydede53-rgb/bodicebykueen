@@ -15,12 +15,12 @@ export function ShopSearch({ initialQuery = "" }: { initialQuery?: string }) {
 
   return (
     <div id="search" className="mt-8 scroll-mt-28">
-      <p className="mb-3 text-[0.68rem] uppercase tracking-[0.22em] text-champagne">
+      <p className="mb-3 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-label">
         Search products
       </p>
       <form
         onSubmit={onSearch}
-        className="flex w-full max-w-2xl items-center gap-3 border border-champagne/40 bg-ink-soft/80 px-4 py-3.5"
+        className="flex w-full max-w-2xl items-center gap-3 rounded-xl border border-label/40 bg-ink px-4 py-3.5"
       >
         <input
           value={query}
@@ -31,7 +31,7 @@ export function ShopSearch({ initialQuery = "" }: { initialQuery?: string }) {
         />
         <button
           type="submit"
-          className="shrink-0 bg-champagne px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--on-accent)] transition hover:bg-champagne-deep"
+          className="shrink-0 rounded-full bg-champagne px-4 py-2.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[var(--on-accent)] transition hover:bg-champagne-deep"
         >
           Search
         </button>

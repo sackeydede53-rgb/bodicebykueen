@@ -43,12 +43,12 @@ export function Header() {
               key={link.href}
               href={link.href}
                 className={cn(
-                  "text-[0.66rem] uppercase tracking-[0.22em] text-ivory/75 transition hover:text-champagne",
+                  "text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-label transition hover:text-ivory",
                   (link.href === "/shop"
                     ? pathname === "/shop"
                     : link.href.startsWith("/shop#")
                       ? false
-                      : pathname.startsWith(link.href)) && "text-champagne",
+                      : pathname.startsWith(link.href)) && "text-ivory",
                 )}
             >
               {link.label}
@@ -69,13 +69,13 @@ export function Header() {
           <ThemeToggle />
           <Link
             href="/shop"
-            className="hidden text-[0.66rem] uppercase tracking-[0.22em] text-ivory/75 transition hover:text-champagne min-[400px]:inline md:hidden"
+            className="hidden text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-label transition hover:text-ivory min-[400px]:inline md:hidden"
           >
             Shop
           </Link>
           <Link
             href="/cart"
-            className="text-[0.66rem] uppercase tracking-[0.22em] text-ivory/75 transition hover:text-champagne"
+            className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-label transition hover:text-ivory"
           >
             Cart ({itemCount})
           </Link>

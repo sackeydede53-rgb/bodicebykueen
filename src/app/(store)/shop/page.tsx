@@ -57,7 +57,7 @@ export default async function ShopPage({
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-24 md:px-10">
       <div className="mb-10">
-        <p className="text-[0.7rem] uppercase tracking-[0.28em] text-champagne">
+        <p className="text-[0.7rem] uppercase tracking-[0.28em] text-label">
           Collection
         </p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-5xl text-ivory md:text-6xl">
@@ -140,10 +140,10 @@ function FilterChip({
     <Link
       href={href}
       className={cn(
-        "border px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.16em] transition",
+        "border px-3 py-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em] transition",
         active
-          ? "border-champagne bg-champagne text-[var(--on-accent)]"
-          : "border-champagne/30 text-champagne hover:border-champagne",
+          ? "border-label bg-champagne text-[var(--on-accent)]"
+          : "border-label/45 bg-ink text-label hover:border-label hover:bg-ink-soft",
       )}
     >
       {children}

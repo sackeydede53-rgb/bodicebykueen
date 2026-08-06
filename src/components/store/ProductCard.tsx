@@ -119,7 +119,9 @@ export function ProductCard({
             <p className="mt-1 text-xs text-stone">Est. {preorderEta}</p>
           )}
         </div>
-        <p className="shrink-0 pt-1 text-sm text-champagne">{formatGhs(price)}</p>
+        <p className="shrink-0 pt-1 text-sm font-semibold text-label">
+          {formatGhs(price)}
+        </p>
       </div>
     </Link>
   );
