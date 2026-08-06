@@ -177,27 +177,34 @@ export default async function InventoryPage({ searchParams }: Props) {
         </p>
       )}
 
-      {/* Compact money strip */}
-      <section className="grid gap-3 sm:grid-cols-3">
-        <MoneyChip
-          step="1"
-          label="Money in stock"
-          value={formatGhs(inventoryCost)}
-          hint={`${unitsInStock} pieces at cost`}
-        />
-        <MoneyChip
-          step="2"
-          label="If all sell"
-          value={formatGhs(inventoryRetail)}
-          hint="At today’s sell prices"
-        />
-        <MoneyChip
-          step="3"
-          label="Profit waiting"
-          value={formatGhs(potentialProfit)}
-          hint={`Sales profit so far ${formatGhs(realizedGross - totalExpenses)}`}
-          accent
-        />
+      {/* Compact money strip — totals only; edit prices on each product below */}
+      <section className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <MoneyChip
+            step="1"
+            label="Money in stock"
+            value={formatGhs(inventoryCost)}
+            hint={`${unitsInStock} pieces × what you paid (cost)`}
+          />
+          <MoneyChip
+            step="2"
+            label="If all sell"
+            value={formatGhs(inventoryRetail)}
+            hint="Stock × each product’s sell price (not typed here)"
+          />
+          <MoneyChip
+            step="3"
+            label="Profit waiting"
+            value={formatGhs(potentialProfit)}
+            hint={`Step 2 − step 1 · sales so far ${formatGhs(realizedGross - totalExpenses)}`}
+            accent
+          />
+        </div>
+        <p className="rounded-xl border border-[#e8d5d8] bg-white px-4 py-3 text-sm text-[#6f6f6f]">
+          These three numbers update themselves. To change the sell amount,
+          pick a product below and edit <strong className="text-[#3a3a3a]">Sell price</strong>,
+          then press <strong className="text-[#3a3a3a]">Save changes</strong>.
+        </p>
       </section>
 
       {missingCostCount > 0 && (
