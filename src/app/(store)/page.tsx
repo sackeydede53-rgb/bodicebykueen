@@ -45,14 +45,14 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Campaign hero — compact on mobile, 3-column on desktop */}
-      <section className="relative overflow-hidden pt-20 md:pt-24">
+      {/* Campaign hero — phone/iPad single column; 3-column from lg */}
+      <section className="relative overflow-hidden pt-[calc(5rem+env(safe-area-inset-top))] lg:pt-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(215,177,183,0.35),transparent_45%)]" />
 
         <div className="relative mx-auto max-w-7xl px-5 md:px-10">
-          <div className="relative grid min-h-[58vh] overflow-hidden rounded-2xl bg-ink-soft md:min-h-[72vh] md:grid-cols-[1fr_1.15fr_1fr] md:rounded-3xl">
+          <div className="relative grid min-h-[min(70vh,640px)] overflow-hidden rounded-2xl bg-ink-soft lg:min-h-[72vh] lg:grid-cols-[1fr_1.15fr_1fr] lg:rounded-3xl">
             <div
-              className="hidden bg-cover bg-center md:block"
+              className="hidden bg-cover bg-center lg:block"
               style={{
                 backgroundImage: "url('/uploads/hero-left.png')",
               }}
@@ -60,7 +60,7 @@ export default async function HomePage() {
 
             <div className="relative flex flex-col items-center justify-center px-5 py-12 text-center md:px-10 md:py-16">
               <div
-                className="absolute inset-0 md:hidden"
+                className="absolute inset-0 lg:hidden"
                 style={{
                   backgroundImage:
                     "linear-gradient(180deg, rgba(58,58,58,0.55), rgba(180,132,144,0.78)), url('/uploads/hero-left.png')",
@@ -69,26 +69,26 @@ export default async function HomePage() {
                 }}
               />
               <div className="relative z-10 w-full max-w-md">
-                <p className="fade-up text-[0.68rem] uppercase tracking-[0.38em] text-white drop-shadow md:text-label">
+                <p className="fade-up text-[0.68rem] uppercase tracking-[0.38em] text-white drop-shadow lg:text-label lg:drop-shadow-none">
                   — New collection —
                 </p>
-                <h1 className="fade-up-delay mt-4 font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-[0.04em] text-white drop-shadow md:mt-5 md:text-6xl md:text-ivory md:drop-shadow-none lg:text-7xl">
+                <h1 className="fade-up-delay mt-4 font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-[0.04em] text-white drop-shadow md:text-6xl lg:mt-5 lg:text-7xl lg:text-ivory lg:drop-shadow-none">
                   Bodice
-                  <span className="mt-3 block text-2xl tracking-[0.28em] text-white drop-shadow md:text-label md:drop-shadow-none md:text-3xl">
+                  <span className="mt-3 block text-2xl tracking-[0.28em] text-white drop-shadow md:text-3xl lg:text-label lg:drop-shadow-none">
                     by Kueen
                   </span>
                 </h1>
-                <p className="fade-up-delay-2 mx-auto mt-5 max-w-sm text-sm leading-relaxed text-white/95 drop-shadow md:mt-6 md:text-base md:text-ivory md:drop-shadow-none">
+                <p className="fade-up-delay-2 mx-auto mt-5 max-w-sm text-sm leading-relaxed text-white/95 drop-shadow md:text-base lg:mt-6 lg:text-ivory lg:drop-shadow-none">
                   Basic tops, tube tops, asymmetric tops, tank tops, bodysuits
                   etc — plus pre-order for a wide range of styles.
                 </p>
-                <div className="fade-up-delay-2 mt-8 flex w-full flex-col items-stretch gap-3 md:mt-9 md:flex-row md:flex-wrap md:items-center md:justify-center">
-                  <Link href="/shop" className="btn-primary w-full md:w-auto">
+                <div className="fade-up-delay-2 mt-8 flex w-full flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:mt-9">
+                  <Link href="/shop" className="btn-primary w-full sm:w-auto">
                     Explore products
                   </Link>
                   <Link
                     href="/shop?availability=PREORDER"
-                    className="btn-ghost-hero w-full md:w-auto"
+                    className="btn-ghost-hero w-full sm:w-auto"
                   >
                     Pre-orders
                   </Link>
@@ -97,7 +97,7 @@ export default async function HomePage() {
             </div>
 
             <div
-              className="hidden bg-cover bg-center md:block"
+              className="hidden bg-cover bg-center lg:block"
               style={{
                 backgroundImage: "url('/uploads/hero-right.png')",
               }}
@@ -166,15 +166,15 @@ export default async function HomePage() {
 
       {/* Editorial story band */}
       <section className="mx-auto max-w-7xl px-5 pb-16 md:px-10 md:pb-24">
-        <div className="overflow-hidden rounded-2xl border border-champagne/15 bg-ink-soft/40 md:rounded-3xl">
-          <div className="grid items-stretch md:grid-cols-2">
+        <div className="overflow-hidden rounded-2xl border border-champagne/15 bg-ink-soft/40 lg:rounded-3xl">
+          <div className="grid items-stretch lg:grid-cols-2">
             <div
-              className="min-h-[240px] bg-cover bg-center md:min-h-[400px]"
+              className="min-h-[220px] bg-cover bg-center sm:min-h-[280px] lg:min-h-[400px]"
               style={{
                 backgroundImage: "url('/uploads/story-band.png')",
               }}
             />
-            <div className="flex flex-col justify-center px-5 py-12 md:px-14 md:py-20">
+            <div className="flex flex-col justify-center px-5 py-12 md:px-10 lg:px-14 lg:py-20">
               <p className="text-[0.68rem] uppercase tracking-[0.28em] text-label">
                 The house
               </p>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
@@ -22,6 +22,24 @@ export const metadata: Metadata = {
   },
   description:
     "Bodice by Kueen — basic tops, Nova tops, rhinestone cowl necks, bodysuits, tube tops, and wide-range pre-order. Kumasi, Ghana.",
+  appleWebApp: {
+    capable: true,
+    title: "Bodice by Kueen",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f2f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#2a2426" },
+  ],
 };
 
 export default function RootLayout({

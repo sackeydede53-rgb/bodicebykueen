@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
+import { FormEvent, useState, Suspense } from "react";
+import { SessionProvider, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 function LoginForm() {
   const router = useRouter();
@@ -80,8 +79,10 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="admin-shell min-h-screen" />}>
-      <LoginForm />
-    </Suspense>
+    <SessionProvider>
+      <Suspense fallback={<div className="admin-shell min-h-screen" />}>
+        <LoginForm />
+      </Suspense>
+    </SessionProvider>
   );
 }

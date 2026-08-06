@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, type MouseEvent } from "react";
 import { availabilityLabel } from "@/lib/availability";
-import { formatGhs, cn } from "@/lib/utils";
+import { formatGhs, cn, safariSafeImageUrl } from "@/lib/utils";
 
 type ProductCardProps = {
   name: string;
@@ -26,11 +26,15 @@ export function ProductCard({
   preorderEta,
   outOfStock = false,
 }: ProductCardProps) {
-  const slides = (imageUrls?.filter(Boolean).length
-    ? imageUrls.filter(Boolean)
-    : imageUrl
-      ? [imageUrl]
-      : []) as string[];
+  const slides = (
+    imageUrls?.filter(Boolean).length
+      ? imageUrls.filter(Boolean)
+      : imageUrl
+        ? [imageUrl]
+        : []
+  )
+    .map((src) => safariSafeImageUrl(src))
+    .filter(Boolean) as string[];
   const [index, setIndex] = useState(0);
   const canSlide = slides.length > 1;
   const current = slides[index];
@@ -115,7 +119,7 @@ export function ProductCard({
           </>
         )}
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent p-4 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="product-card-cta pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent p-4 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
           <span className="inline-flex border border-champagne/50 bg-ink/50 px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-ivory backdrop-blur-sm">
             {outOfStock ? "View details →" : "View piece →"}
           </span>

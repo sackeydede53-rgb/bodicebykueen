@@ -25,7 +25,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const ext = path.extname(file.name) || ".jpg";
+    // Normalize JFIF → jpg (Safari/iPad is unreliable with .jfif URLs)
+    let ext = path.extname(file.name).toLowerCase() || ".jpg";
+    if (ext === ".jfif" || ext === ".jfi") ext = ".jpg";
     const filename = `products/${randomUUID()}${ext}`;
 
     // Production (Vercel): store in Blob — local disk is not persistent

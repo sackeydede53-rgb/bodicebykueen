@@ -24,3 +24,13 @@ export function generateOrderNumber() {
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
+
+/** Safari/iPad often won't render local .jfif as images — prefer .jpg. */
+export function safariSafeImageUrl(url?: string | null) {
+  if (!url) return url ?? undefined;
+  // Only rewrite app-hosted uploads; Blob URLs already send image/jpeg.
+  if (url.includes("/uploads/") && /\.jfif?$/i.test(url)) {
+    return url.replace(/\.jfif?$/i, ".jpg");
+  }
+  return url;
+}

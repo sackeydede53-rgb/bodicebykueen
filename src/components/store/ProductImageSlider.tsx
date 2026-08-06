@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, safariSafeImageUrl } from "@/lib/utils";
 
 type SlideImage = {
   id: string;
@@ -69,9 +69,9 @@ export function ProductImageSlider({ images, productName }: Props) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={current.id}
-          src={current.url}
+          src={safariSafeImageUrl(current.url)}
           alt={current.alt ?? productName}
-          className="h-full w-full object-cover fade-up"
+          className="h-full w-full object-cover"
         />
 
         {canSlide && (
@@ -131,7 +131,7 @@ export function ProductImageSlider({ images, productName }: Props) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={img.url}
+                src={safariSafeImageUrl(img.url)}
                 alt={img.alt ?? `${productName} ${i + 1}`}
                 className="h-full w-full object-cover"
               />

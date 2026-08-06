@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { safariSafeImageUrl } from "@/lib/utils";
 
 export type CategoryTile = {
   id: string;
@@ -99,7 +100,7 @@ function CategoryCard({
       {category.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={category.imageUrl}
+          src={safariSafeImageUrl(category.imageUrl)}
           alt=""
           className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
         />

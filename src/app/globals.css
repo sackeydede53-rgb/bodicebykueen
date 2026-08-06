@@ -86,8 +86,22 @@ html[data-theme="dark"] {
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -95,6 +109,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), Georgia, serif;
   min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 a {
@@ -113,39 +130,57 @@ a {
     var(--grain-base);
 }
 
+/* Transform-only entrance — never animate opacity to 0.
+   Safari/iPad can leave fill-mode:both stuck invisible. */
 .fade-up {
-  animation: fadeUp 0.9s ease both;
+  animation: fadeRise 0.9s ease both;
 }
 
 .fade-up-delay {
-  animation: fadeUp 1.1s ease 0.15s both;
+  animation: fadeRise 1.1s ease 0.15s both;
 }
 
 .fade-up-delay-2 {
-  animation: fadeUp 1.2s ease 0.3s both;
+  animation: fadeRise 1.2s ease 0.3s both;
 }
 
 .ken-burn {
   animation: kenBurn 18s ease-in-out infinite alternate;
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
+@keyframes fadeRise {
+  0% {
+    transform: translateY(14px);
   }
-  to {
-    opacity: 1;
+  100% {
     transform: translateY(0);
   }
 }
 
 @keyframes kenBurn {
-  from {
+  0% {
     transform: scale(1);
   }
-  to {
+  100% {
     transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .fade-up-delay,
+  .fade-up-delay-2,
+  .ken-burn {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Touch / iPad: always show product card affordance (no hover) */
+@media (hover: none) {
+  .product-card-cta {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
@@ -226,7 +261,7 @@ html[data-theme="dark"] .btn-primary:hover {
   color: #ffffff;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .btn-ghost-hero {
     border-color: var(--ghost-border);
     background: var(--ghost-bg);
