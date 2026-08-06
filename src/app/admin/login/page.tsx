@@ -9,6 +9,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const updated = searchParams.get("updated");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,10 +42,17 @@ function LoginForm() {
         <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl">
           Admin login
         </h1>
+        {(updated === "email" || updated === "profile") && (
+          <p className="mt-4 text-sm text-success">
+            {updated === "email"
+              ? "Login email updated. Sign in with your new email."
+              : "Profile updated. Sign in again to continue."}
+          </p>
+        )}
         <div className="mt-8 space-y-4">
           <div>
             <label className="label" htmlFor="email">
-              Email
+              Login email
             </label>
             <input
               id="email"
@@ -52,7 +60,7 @@ function LoginForm() {
               type="email"
               required
               className="input"
-              defaultValue="admin@bodicebykueen.com"
+              autoComplete="username"
             />
           </div>
           <div>

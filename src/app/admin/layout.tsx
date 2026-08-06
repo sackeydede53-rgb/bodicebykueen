@@ -45,8 +45,14 @@ export default async function AdminLayout({
               <p className="mt-1 truncate text-xs text-ivory/40">
                 {session.user.email}
               </p>
+              <Link
+                href="/admin/account"
+                className="mt-4 block text-[0.65rem] uppercase tracking-[0.2em] text-champagne/70 transition hover:text-champagne"
+              >
+                Account settings
+              </Link>
               <form
-                className="mt-5"
+                className="mt-3"
                 action={async () => {
                   "use server";
                   await signOut({ redirectTo: "/admin/login" });
