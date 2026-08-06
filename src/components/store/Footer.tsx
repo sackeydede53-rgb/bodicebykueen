@@ -37,8 +37,16 @@ export function Footer() {
           <p className="text-[0.65rem] uppercase tracking-[0.2em] text-champagne">
             Visit
           </p>
-          <p>Kumasi, Ghana</p>
-          <p>Mobile Money via Paystack</p>
+          <p>Kumasi &amp; Koforidua, Ghana</p>
+          <p>
+            Customer care &amp; enquiry:{" "}
+            <a
+              href="mailto:bodicebykueen01@gmail.com"
+              className="text-ivory/80 transition hover:text-ivory"
+            >
+              bodicebykueen01@gmail.com
+            </a>
+          </p>
           <p className="pt-4 text-xs uppercase tracking-[0.2em] text-champagne/50">
             © {new Date().getFullYear()} Bodice by Kueen
           </p>
