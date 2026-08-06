@@ -50,8 +50,8 @@ export function ColorOptions({
               onClick={() => toggle(color.name)}
               className={`flex items-center gap-2 border px-3 py-2 text-left text-sm transition ${
                 active
-                  ? "border-ink bg-[#f3eee6]"
-                  : "border-[#d0d0d0] bg-white hover:border-ink/40"
+                  ? "border-[#d7b1b7] bg-[#eac5cc]"
+                  : "border-[#d0d0d0] bg-white hover:border-[#d7b1b7]"
               }`}
             >
               <span
