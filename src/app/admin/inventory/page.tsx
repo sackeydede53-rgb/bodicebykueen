@@ -16,6 +16,8 @@ import { InventoryProductCard } from "@/components/admin/InventoryProductCard";
 
 export const dynamic = "force-dynamic";
 
+const PAID_STATUSES = ["PAID", "PROCESSING", "SHIPPED", "DELIVERED"] as const;
+
 type Props = {
   searchParams: Promise<{
     ok?: string;
@@ -30,7 +32,7 @@ export default async function InventoryPage({ searchParams }: Props) {
   const params = await searchParams;
   const view = params.view || "all";
 
-  const [products, expenses] = await Promise.all([
+  const [products, expenses, paidOrders] = await Promise.all([
     prisma.product.findMany({
       include: {
         category: true,
@@ -42,6 +44,10 @@ export default async function InventoryPage({ searchParams }: Props) {
     prisma.inventoryExpense.findMany({
       orderBy: { spentAt: "desc" },
       take: 30,
+    }),
+    prisma.order.findMany({
+      where: { status: { in: [...PAID_STATUSES] } },
+      include: { items: true },
     }),
   ]);
 
@@ -76,6 +82,15 @@ export default async function InventoryPage({ searchParams }: Props) {
     };
   });
 
+  let salesRevenue = 0;
+  let salesCogs = 0;
+  for (const order of paidOrders) {
+    salesRevenue += order.total;
+    for (const item of order.items) {
+      salesCogs += (item.unitCost || 0) * item.quantity;
+    }
+  }
+  const realizedGross = salesRevenue - salesCogs;
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   const filtered = rows.filter((row) => {
@@ -155,18 +170,23 @@ export default async function InventoryPage({ searchParams }: Props) {
         </p>
       )}
 
-      {/* Simple stock money — no “if all sell” / projected profit */}
-      <section className="grid gap-3 sm:grid-cols-2">
+      {/* Only real / cost numbers — no “if all sell” or “profit waiting” guesses */}
+      <section className="grid gap-3 sm:grid-cols-3">
         <MoneyChip
           label="Money in stock"
           value={formatGhs(inventoryCost)}
-          hint={`${unitsInStock} pieces × what you paid (cost)`}
-          accent
+          hint={`${unitsInStock} pieces × what you paid. Edit cost on each product below.`}
         />
         <MoneyChip
-          label="Extra spent on goods"
-          value={formatGhs(totalExpenses)}
-          hint="Fabric, packaging, supplier trips (log below)"
+          label="Sales so far"
+          value={formatGhs(salesRevenue)}
+          hint="From paid orders only (nothing counted until customers pay)."
+        />
+        <MoneyChip
+          label="Profit so far"
+          value={formatGhs(realizedGross - totalExpenses)}
+          hint="Paid sales − product costs − expenses you logged."
+          accent
         />
       </section>
 
