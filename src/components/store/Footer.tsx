@@ -8,7 +8,7 @@ export function Footer() {
           <div className="font-[family-name:var(--font-display)] text-3xl tracking-[0.08em]">
             Bodice
           </div>
-          <div className="mt-1 text-[0.62rem] uppercase tracking-[0.32em] text-champagne">
+          <div className="mt-1 text-[0.62rem] uppercase tracking-[0.32em] text-label">
             by Kueen
           </div>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-stone">
@@ -17,7 +17,7 @@ export function Footer() {
           </p>
         </div>
         <div className="space-y-3 text-sm">
-          <p className="text-[0.65rem] uppercase tracking-[0.2em] text-champagne">
+          <p className="text-[0.65rem] uppercase tracking-[0.2em] text-label">
             Explore
           </p>
           <Link href="/shop" className="block text-ivory/75 hover:text-ivory">
@@ -34,7 +34,7 @@ export function Footer() {
           </Link>
         </div>
         <div className="space-y-3 text-sm text-stone">
-          <p className="text-[0.65rem] uppercase tracking-[0.2em] text-champagne">
+          <p className="text-[0.65rem] uppercase tracking-[0.2em] text-label">
             Visit
           </p>
           <p>Kumasi &amp; Koforidua, Ghana</p>

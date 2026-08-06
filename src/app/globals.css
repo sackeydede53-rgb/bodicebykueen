@@ -14,8 +14,10 @@ html[data-theme="light"] {
   --ink-soft: #eac5cc;
   --champagne: #d7b1b7;
   --champagne-deep: #c49aa3;
-  /* Soft light pink for labels on dusty-rose surfaces (high visibility) */
-  --pink-light: #fff5f7;
+  /* Near-white for text on dark/photo overlays only */
+  --pink-light: #ffffff;
+  /* Deep dusty rose for eyebrows/chips on pale blush backgrounds */
+  --label: #6b3f48;
   --ivory: #3a3a3a;
   --ivory-muted: #454545;
   --stone: #4a4a4a;
@@ -43,7 +45,8 @@ html[data-theme="dark"] {
   --ink-soft: #3a3235;
   --champagne: #d7b1b7;
   --champagne-deep: #eac5cc;
-  --pink-light: #ffe8ee;
+  --pink-light: #ffffff;
+  --label: #eac5cc;
   --ivory: #f5f0f1;
   --ivory-muted: #eac5cc;
   --stone: #d0d0d0;
@@ -67,6 +70,7 @@ html[data-theme="dark"] {
   --color-champagne: var(--champagne);
   --color-champagne-deep: var(--champagne-deep);
   --color-pink-light: var(--pink-light);
+  --color-label: var(--label);
   --color-ivory: var(--ivory);
   --color-ivory-muted: var(--ivory-muted);
   --color-stone: var(--stone);
@@ -184,6 +188,43 @@ a {
   border-color: var(--champagne);
   background: var(--ghost-bg-hover);
   color: var(--champagne-deep);
+}
+
+/* Ghost button on photo overlays (hero) — light border + white text */
+.btn-ghost-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 0.9rem 1.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-family: var(--font-body), sans-serif;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.btn-ghost-hero:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .btn-ghost-hero {
+    border-color: var(--ghost-border);
+    background: var(--ghost-bg);
+    color: var(--ivory);
+  }
+
+  .btn-ghost-hero:hover {
+    border-color: var(--champagne);
+    background: var(--ghost-bg-hover);
+    color: var(--champagne-deep);
+  }
 }
 
 .input {

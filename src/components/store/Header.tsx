@@ -60,7 +60,7 @@ export function Header() {
           <div className="font-[family-name:var(--font-display)] text-[1.45rem] leading-none tracking-[0.12em] text-ivory md:text-[1.7rem]">
             Bodice
           </div>
-          <div className="mt-0.5 text-[0.52rem] uppercase tracking-[0.38em] text-pink-light">
+          <div className="mt-0.5 text-[0.52rem] uppercase tracking-[0.38em] text-label">
             by Kueen
           </div>
         </Link>
