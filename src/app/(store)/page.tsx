@@ -75,8 +75,8 @@ export default async function HomePage() {
                   </span>
                 </h1>
                 <p className="fade-up-delay-2 mx-auto mt-5 max-w-sm text-sm leading-relaxed text-white/95 drop-shadow md:mt-6 md:text-base md:text-ivory md:drop-shadow-none">
-                  Basic tops, Nova tops, rhinestone cowl necks, bodysuits, and
-                  tube tops — plus pre-order for a wider range of styles.
+                  Basic tops, tube tops, asymmetric tops, tank tops, bodysuits
+                  etc — plus pre-order for a wide range of styles.
                 </p>
                 <div className="fade-up-delay-2 mt-8 flex w-full flex-col items-stretch gap-3 md:mt-9 md:flex-row md:flex-wrap md:items-center md:justify-center">
                   <Link href="/shop" className="btn-primary w-full md:w-auto">
