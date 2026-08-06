@@ -49,7 +49,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mood" : "Switch to dark mood"}
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
       className="inline-flex min-h-9 items-center gap-1.5 border border-champagne bg-champagne px-2.5 py-1.5 text-[var(--on-accent)] shadow-sm transition hover:bg-champagne-deep sm:gap-2 sm:px-3"
     >
       {isDark ? (
@@ -59,9 +59,6 @@ export function ThemeToggle() {
       )}
       <span className="text-[0.65rem] font-medium uppercase tracking-[0.12em]">
         {isDark ? "Dark" : "Light"}
-      </span>
-      <span className="text-[0.65rem] font-medium uppercase tracking-[0.12em]">
-        Mood
       </span>
     </button>
   );
