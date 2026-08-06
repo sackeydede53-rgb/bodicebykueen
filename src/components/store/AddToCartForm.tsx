@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart";
+import { getColorHex } from "@/lib/colors";
 
 type Variant = {
   id: string;
@@ -36,7 +37,7 @@ export function AddToCartForm({
     () => Array.from(new Set(variants.map((v) => v.color))),
     [variants],
   );
-  const [color, setColor] = useState(colors[0] ?? "Default");
+  const [color, setColor] = useState(colors[0] ?? "Black");
   const sizesForColor = variants.filter((v) => v.color === color);
   const [size, setSize] = useState(sizesForColor[0]?.size ?? "");
   const [message, setMessage] = useState("");
@@ -45,8 +46,7 @@ export function AddToCartForm({
     variants.find((v) => v.color === color && v.size === size) ??
     sizesForColor[0];
 
-  const canPurchase =
-    !!selected && (isPreorder || selected.stock > 0);
+  const canPurchase = !!selected && (isPreorder || selected.stock > 0);
 
   function handleAdd() {
     if (!selected || !canPurchase) return;
@@ -68,28 +68,38 @@ export function AddToCartForm({
 
   return (
     <div className="space-y-6">
-      {colors.length > 1 && (
+      {colors.length > 0 && (
         <div>
-          <p className="label">Color</p>
+          <p className="label">Colour</p>
           <div className="flex flex-wrap gap-2">
-            {colors.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => {
-                  setColor(c);
-                  const next = variants.find((v) => v.color === c);
-                  if (next) setSize(next.size);
-                }}
-                className={`border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] ${
-                  color === c
-                    ? "border-champagne bg-champagne text-ink"
-                    : "border-champagne/30 text-champagne"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+            {colors.map((c) => {
+              const hex = getColorHex(c);
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => {
+                    setColor(c);
+                    const next = variants.find((v) => v.color === c);
+                    if (next) setSize(next.size);
+                  }}
+                  className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] ${
+                    color === c
+                      ? "border-champagne bg-champagne text-ink"
+                      : "border-champagne/30 text-champagne"
+                  }`}
+                >
+                  {hex && (
+                    <span
+                      className="h-3 w-3 rounded-full border border-white/30"
+                      style={{ backgroundColor: hex }}
+                      aria-hidden
+                    />
+                  )}
+                  {c}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

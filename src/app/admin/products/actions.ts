@@ -28,7 +28,7 @@ export async function createProduct(formData: FormData) {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  const colors = String(formData.get("colors") || "Default")
+  const colors = String(formData.get("colors") || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
@@ -36,6 +36,12 @@ export async function createProduct(formData: FormData) {
 
   if (!name || !description || !price) {
     throw new Error("Name, description, and price are required");
+  }
+  if (!colors.length) {
+    throw new Error("Select at least one colour");
+  }
+  if (!sizes.length) {
+    throw new Error("Add at least one size");
   }
 
   let slug = slugify(name);
@@ -151,12 +157,41 @@ export async function addVariant(formData: FormData) {
   await requireAdmin();
   const productId = String(formData.get("productId"));
   const size = String(formData.get("size") || "").trim();
-  const color = String(formData.get("color") || "Default").trim();
+  const color = String(formData.get("color") || "Black").trim();
   const stock = Number(formData.get("stock") || 0);
-  if (!size) return;
+  if (!size || !color) return;
 
   await prisma.productVariant.create({
     data: { productId, size, color, stock },
   });
   revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/shop");
+}
+
+/** Add a colour across all existing sizes (or default sizes if none). */
+export async function addColorToProduct(formData: FormData) {
+  await requireAdmin();
+  const productId = String(formData.get("productId"));
+  const color = String(formData.get("color") || "").trim();
+  const stock = Number(formData.get("stock") || 0);
+  if (!productId || !color) return;
+
+  const existing = await prisma.productVariant.findMany({
+    where: { productId },
+  });
+  const sizes = Array.from(new Set(existing.map((v) => v.size)));
+  const sizesToCreate = sizes.length ? sizes : ["XS", "S", "M", "L", "XL"];
+
+  for (const size of sizesToCreate) {
+    const already = existing.some(
+      (v) => v.size === size && v.color.toLowerCase() === color.toLowerCase(),
+    );
+    if (already) continue;
+    await prisma.productVariant.create({
+      data: { productId, size, color, stock },
+    });
+  }
+
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/shop");
 }

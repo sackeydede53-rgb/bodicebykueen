@@ -1,0 +1,33 @@
+export type ClothingColor = {
+  name: string;
+  hex: string;
+};
+
+/** Common clothing colours for Bodice by Kueen */
+export const CLOTHING_COLORS: ClothingColor[] = [
+  { name: "Black", hex: "#111111" },
+  { name: "White", hex: "#f4f4f4" },
+  { name: "Ivory", hex: "#f7f2ea" },
+  { name: "Nude", hex: "#e8c4a8" },
+  { name: "Champagne", hex: "#d4af7a" },
+  { name: "Brown", hex: "#6b3e26" },
+  { name: "Chocolate", hex: "#3d2314" },
+  { name: "Burgundy", hex: "#6b1e2a" },
+  { name: "Red", hex: "#b91c1c" },
+  { name: "Blush", hex: "#e8a0b0" },
+  { name: "Pink", hex: "#ec4899" },
+  { name: "Olive", hex: "#556b2f" },
+  { name: "Emerald", hex: "#0f5c4c" },
+  { name: "Navy", hex: "#1e3a5f" },
+  { name: "Royal Blue", hex: "#1d4ed8" },
+  { name: "Gold", hex: "#c9a227" },
+  { name: "Silver", hex: "#c0c0c0" },
+  { name: "Grey", hex: "#6b7280" },
+];
+
+export function getColorHex(name: string): string | null {
+  const match = CLOTHING_COLORS.find(
+    (c) => c.name.toLowerCase() === name.trim().toLowerCase(),
+  );
+  return match?.hex ?? null;
+}

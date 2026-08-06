@@ -2,12 +2,15 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import {
+  addColorToProduct,
   addVariant,
   deleteProduct,
   updateProduct,
   updateVariantStock,
 } from "../actions";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { ColorSelect } from "@/components/admin/ColorSelect";
+import { getColorHex } from "@/lib/colors";
 
 export const dynamic = "force-dynamic";
 
@@ -132,42 +135,94 @@ export default async function EditProductPage({ params }: Props) {
 
       <section className="border border-[#d8d0c4] bg-white p-6">
         <h2 className="text-sm uppercase tracking-[0.16em] text-[#8a8174]">
-          Variants
+          Colours & sizes
         </h2>
         <ul className="mt-4 space-y-3">
-          {product.variants.map((variant) => (
-            <li
-              key={variant.id}
-              className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee7dc] pb-3 text-sm"
-            >
-              <span>
-                {variant.color} · {variant.size}
-              </span>
-              <form action={updateVariantStock} className="flex items-center gap-2">
-                <input type="hidden" name="variantId" value={variant.id} />
-                <input
-                  name="stock"
-                  type="number"
-                  defaultValue={variant.stock}
-                  className="input w-24"
-                />
-                <button type="submit" className="underline">
-                  Update stock
-                </button>
-              </form>
-            </li>
-          ))}
+          {product.variants.map((variant) => {
+            const hex = getColorHex(variant.color);
+            return (
+              <li
+                key={variant.id}
+                className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee7dc] pb-3 text-sm"
+              >
+                <span className="flex items-center gap-2">
+                  {hex && (
+                    <span
+                      className="h-3.5 w-3.5 rounded-full border border-black/15"
+                      style={{ backgroundColor: hex }}
+                      aria-hidden
+                    />
+                  )}
+                  {variant.color} · {variant.size}
+                </span>
+                <form
+                  action={updateVariantStock}
+                  className="flex items-center gap-2"
+                >
+                  <input type="hidden" name="variantId" value={variant.id} />
+                  <input
+                    name="stock"
+                    type="number"
+                    defaultValue={variant.stock}
+                    className="input w-24"
+                  />
+                  <button type="submit" className="underline">
+                    Update stock
+                  </button>
+                </form>
+              </li>
+            );
+          })}
         </ul>
 
-        <form action={addVariant} className="mt-6 grid gap-3 sm:grid-cols-4">
-          <input type="hidden" name="productId" value={product.id} />
-          <input name="size" placeholder="Size" className="input" required />
-          <input name="color" placeholder="Color" className="input" defaultValue="Default" />
-          <input name="stock" type="number" placeholder="Stock" className="input" defaultValue={0} />
-          <button type="submit" className="admin-btn px-3 py-2">
-            Add variant
-          </button>
-        </form>
+        <div className="mt-8 space-y-6 border-t border-[#eee7dc] pt-6">
+          <div>
+            <h3 className="text-xs uppercase tracking-[0.14em] text-[#8a8174]">
+              Add a colour (all sizes)
+            </h3>
+            <form
+              action={addColorToProduct}
+              className="mt-3 grid gap-3 sm:grid-cols-[1fr_8rem_auto]"
+            >
+              <input type="hidden" name="productId" value={product.id} />
+              <ColorSelect defaultValue="Black" />
+              <input
+                name="stock"
+                type="number"
+                placeholder="Stock"
+                className="input"
+                defaultValue={0}
+              />
+              <button type="submit" className="admin-btn px-3 py-2">
+                Add colour
+              </button>
+            </form>
+          </div>
+
+          <div>
+            <h3 className="text-xs uppercase tracking-[0.14em] text-[#8a8174]">
+              Add one size / colour variant
+            </h3>
+            <form
+              action={addVariant}
+              className="mt-3 grid gap-3 sm:grid-cols-4"
+            >
+              <input type="hidden" name="productId" value={product.id} />
+              <input name="size" placeholder="Size" className="input" required />
+              <ColorSelect defaultValue="Black" />
+              <input
+                name="stock"
+                type="number"
+                placeholder="Stock"
+                className="input"
+                defaultValue={0}
+              />
+              <button type="submit" className="admin-btn px-3 py-2">
+                Add variant
+              </button>
+            </form>
+          </div>
+        </div>
       </section>
     </div>
   );

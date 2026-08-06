@@ -2,6 +2,7 @@ import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import { createProduct } from "../actions";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { ColorOptions } from "@/components/admin/ColorOptions";
 
 export const dynamic = "force-dynamic";
 
@@ -54,8 +55,8 @@ export default async function NewProductPage() {
         </div>
         <Field label="Pre-order ETA" name="preorderEta" placeholder="e.g. Ships mid-September" />
         <Field label="Sizes (comma-separated)" name="sizes" defaultValue="XS,S,M,L,XL" />
-        <Field label="Colors (comma-separated)" name="colors" defaultValue="Default" />
-        <Field label="Initial stock per variant" name="stock" type="number" defaultValue="5" />
+        <ColorOptions defaultColors={["Black", "White"]} />
+        <Field label="Initial stock per colour × size" name="stock" type="number" defaultValue="5" />
         <ImageUploader />
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="featured" /> Featured on home

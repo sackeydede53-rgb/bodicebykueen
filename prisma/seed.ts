@@ -224,7 +224,7 @@ async function main() {
         variants: {
           create: ["XS", "S", "M", "L", "XL"].map((size) => ({
             size,
-            color: "Default",
+            color: "Black",
             stock: p.stock,
           })),
         },
