@@ -25,12 +25,12 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
     const initial =
-      stored === "light" || stored === "dark" ? stored : "dark";
+      stored === "light" || stored === "dark" ? stored : "light";
     setThemeState(initial);
     applyTheme(initial);
   }, []);

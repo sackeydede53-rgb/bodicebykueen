@@ -32,14 +32,14 @@ export default async function OrderDetailPage({ params }: Props) {
         <h1 className="font-[family-name:var(--font-display)] text-4xl">
           {order.orderNumber}
         </h1>
-        <p className="mt-2 text-sm text-[#8a8174]">
+        <p className="mt-2 text-sm text-[#6f6f6f]">
           {order.createdAt.toLocaleString()} · {order.status}
           {order.hasPreorder ? " · includes pre-order" : ""}
         </p>
       </div>
 
-      <section className="border border-[#d8d0c4] bg-white p-6 text-sm">
-        <h2 className="text-xs uppercase tracking-[0.16em] text-[#8a8174]">
+      <section className="border border-[#d0d0d0] bg-white p-6 text-sm">
+        <h2 className="text-xs uppercase tracking-[0.16em] text-[#6f6f6f]">
           Customer
         </h2>
         <div className="mt-3 space-y-1">
@@ -54,12 +54,12 @@ export default async function OrderDetailPage({ params }: Props) {
             {order.city}
             {order.region ? `, ${order.region}` : ""}
           </p>
-          {order.notes && <p className="pt-2 text-[#8a8174]">Notes: {order.notes}</p>}
+          {order.notes && <p className="pt-2 text-[#6f6f6f]">Notes: {order.notes}</p>}
         </div>
       </section>
 
-      <section className="border border-[#d8d0c4] bg-white p-6">
-        <h2 className="text-xs uppercase tracking-[0.16em] text-[#8a8174]">
+      <section className="border border-[#d0d0d0] bg-white p-6">
+        <h2 className="text-xs uppercase tracking-[0.16em] text-[#6f6f6f]">
           Items
         </h2>
         <ul className="mt-4 space-y-3 text-sm">
@@ -93,8 +93,8 @@ export default async function OrderDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="border border-[#d8d0c4] bg-white p-6 text-sm">
-        <h2 className="text-xs uppercase tracking-[0.16em] text-[#8a8174]">
+      <section className="border border-[#d0d0d0] bg-white p-6 text-sm">
+        <h2 className="text-xs uppercase tracking-[0.16em] text-[#6f6f6f]">
           Payment
         </h2>
         {order.payment ? (
@@ -111,7 +111,7 @@ export default async function OrderDetailPage({ params }: Props) {
 
       <form
         action={updateOrderStatus}
-        className="flex flex-wrap items-end gap-3 border border-[#d8d0c4] bg-white p-6"
+        className="flex flex-wrap items-end gap-3 border border-[#d0d0d0] bg-white p-6"
       >
         <input type="hidden" name="id" value={order.id} />
         <div>

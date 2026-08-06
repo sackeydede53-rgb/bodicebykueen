@@ -36,7 +36,7 @@ export function ColorOptions({
   return (
     <div className="space-y-3">
       <p className="label">Colours</p>
-      <p className="text-xs text-[#8a8174]">
+      <p className="text-xs text-[#6f6f6f]">
         Select the colour options for this piece. Variants are created for each
         colour × size.
       </p>
@@ -51,7 +51,7 @@ export function ColorOptions({
               className={`flex items-center gap-2 border px-3 py-2 text-left text-sm transition ${
                 active
                   ? "border-ink bg-[#f3eee6]"
-                  : "border-[#d8d0c4] bg-white hover:border-ink/40"
+                  : "border-[#d0d0d0] bg-white hover:border-ink/40"
               }`}
             >
               <span
@@ -76,7 +76,7 @@ export function ColorOptions({
           placeholder="e.g. Copper, Forest Green"
           className="input"
         />
-        <p className="mt-1 text-xs text-[#8a8174]">
+        <p className="mt-1 text-xs text-[#6f6f6f]">
           Comma-separated names not in the list above.
         </p>
       </div>

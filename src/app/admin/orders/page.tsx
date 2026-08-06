@@ -34,9 +34,9 @@ export default async function OrdersPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <div className="mt-8 overflow-x-auto border border-[#d8d0c4] bg-white">
+      <div className="mt-8 overflow-x-auto border border-[#d0d0d0] bg-white">
         <table className="w-full min-w-[800px] text-left text-sm">
-          <thead className="border-b border-[#d8d0c4] text-xs uppercase tracking-[0.12em] text-[#8a8174]">
+          <thead className="border-b border-[#d0d0d0] text-xs uppercase tracking-[0.12em] text-[#6f6f6f]">
             <tr>
               <th className="p-3">Order</th>
               <th className="p-3">Customer</th>
@@ -53,13 +53,13 @@ export default async function OrdersPage({ searchParams }: Props) {
                   <Link href={`/admin/orders/${order.id}`} className="underline">
                     {order.orderNumber}
                   </Link>
-                  <div className="text-xs text-[#8a8174]">
+                  <div className="text-xs text-[#6f6f6f]">
                     {order.createdAt.toLocaleString()}
                   </div>
                 </td>
                 <td className="p-3">
                   {order.customerName}
-                  <div className="text-xs text-[#8a8174]">
+                  <div className="text-xs text-[#6f6f6f]">
                     {order.customerPhone}
                   </div>
                 </td>
@@ -78,7 +78,7 @@ export default async function OrdersPage({ searchParams }: Props) {
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-6 text-[#8a8174]">
+                <td colSpan={6} className="p-6 text-[#6f6f6f]">
                   No orders yet.
                 </td>
               </tr>

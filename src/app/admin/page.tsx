@@ -36,7 +36,7 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <div>
-        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#8a8174]">
+        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#6f6f6f]">
           Overview
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-display)] text-5xl tracking-[0.02em]">
@@ -53,7 +53,7 @@ export default async function AdminDashboardPage() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section className="admin-panel p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#8a8174]">
+            <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
               Recent orders
             </h2>
             <Link
@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
           </div>
           <ul className="mt-5 divide-y divide-black/[0.05]">
             {recentOrders.length === 0 && (
-              <li className="py-3 text-sm text-[#8a8174]">No orders yet.</li>
+              <li className="py-3 text-sm text-[#6f6f6f]">No orders yet.</li>
             )}
             {recentOrders.map((order) => (
               <li key={order.id} className="flex items-center justify-between gap-3 py-3 text-sm">
@@ -76,13 +76,13 @@ export default async function AdminDashboardPage() {
                   >
                     {order.orderNumber}
                   </Link>
-                  <p className="mt-0.5 text-xs text-[#8a8174]">
+                  <p className="mt-0.5 text-xs text-[#6f6f6f]">
                     {order.customerName}
                   </p>
                 </div>
                 <div className="text-right">
                   <p>{formatGhs(order.total)}</p>
-                  <p className="mt-0.5 text-[0.62rem] uppercase tracking-[0.12em] text-[#8a8174]">
+                  <p className="mt-0.5 text-[0.62rem] uppercase tracking-[0.12em] text-[#6f6f6f]">
                     {order.status}
                   </p>
                 </div>
@@ -92,18 +92,18 @@ export default async function AdminDashboardPage() {
         </section>
 
         <section className="admin-panel p-6">
-          <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#8a8174]">
+          <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
             Low stock
           </h2>
           <ul className="mt-5 divide-y divide-black/[0.05]">
             {lowStock.length === 0 && (
-              <li className="py-3 text-sm text-[#8a8174]">Stock looks healthy.</li>
+              <li className="py-3 text-sm text-[#6f6f6f]">Stock looks healthy.</li>
             )}
             {lowStock.map((v) => (
               <li key={v.id} className="flex justify-between gap-3 py-3 text-sm">
                 <span>
                   {v.product.name}
-                  <span className="text-[#8a8174]">
+                  <span className="text-[#6f6f6f]">
                     {" "}
                     · {v.size}/{v.color}
                   </span>
@@ -123,7 +123,7 @@ export default async function AdminDashboardPage() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="admin-panel p-6">
-      <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[#8a8174]">
+      <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
         {label}
       </p>
       <p className="mt-3 font-[family-name:var(--font-display)] text-4xl tracking-wide">

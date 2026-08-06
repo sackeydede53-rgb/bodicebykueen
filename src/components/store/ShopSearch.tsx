@@ -31,7 +31,7 @@ export function ShopSearch({ initialQuery = "" }: { initialQuery?: string }) {
         />
         <button
           type="submit"
-          className="shrink-0 bg-champagne px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.18em] text-ink transition hover:bg-champagne-deep"
+          className="shrink-0 bg-champagne px-4 py-2.5 text-[0.65rem] uppercase tracking-[0.18em] text-[var(--on-accent)] transition hover:bg-champagne-deep"
         >
           Search
         </button>

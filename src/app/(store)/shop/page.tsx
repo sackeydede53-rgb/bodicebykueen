@@ -142,7 +142,7 @@ function FilterChip({
       className={cn(
         "border px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.16em] transition",
         active
-          ? "border-champagne bg-champagne text-ink"
+          ? "border-champagne bg-champagne text-[var(--on-accent)]"
           : "border-champagne/30 text-champagne hover:border-champagne",
       )}
     >

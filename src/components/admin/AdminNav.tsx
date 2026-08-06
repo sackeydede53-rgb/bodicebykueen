@@ -29,8 +29,8 @@ export function AdminNav({ mobile = false }: { mobile?: boolean }) {
               className={cn(
                 "shrink-0 border px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.16em] transition",
                 active
-                  ? "border-ink bg-ink !text-[#f7f2ea]"
-                  : "border-[#d8d0c4] bg-white text-[#5c5348]",
+                  ? "border-[#d7b1b7] bg-[#d7b1b7] !text-white"
+                  : "border-[#d0d0d0] bg-white text-[#6f6f6f]",
               )}
             >
               {link.label}

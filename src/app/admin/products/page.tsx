@@ -25,13 +25,13 @@ export default async function AdminProductsPage() {
     <div>
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#8a8174]">
+          <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#6f6f6f]">
             Catalogue
           </p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-5xl tracking-[0.02em]">
             Products
           </h1>
-          <p className="mt-3 max-w-lg text-sm text-[#6b6358]">
+          <p className="mt-3 max-w-lg text-sm text-[#6f6f6f]">
             {products.length} pieces · {publishedCount} published · {preorderCount}{" "}
             on pre-order
           </p>
@@ -46,7 +46,7 @@ export default async function AdminProductsPage() {
           <p className="font-[family-name:var(--font-display)] text-3xl">
             No pieces yet
           </p>
-          <p className="mt-3 text-sm text-[#8a8174]">
+          <p className="mt-3 text-sm text-[#6f6f6f]">
             Add your first look to open the collection.
           </p>
           <Link href="/admin/products/new" className="admin-btn mt-8">
@@ -55,7 +55,7 @@ export default async function AdminProductsPage() {
         </div>
       ) : (
         <div className="admin-panel mt-10 overflow-hidden">
-          <div className="hidden border-b border-black/[0.06] px-5 py-3 text-[0.62rem] uppercase tracking-[0.18em] text-[#8a8174] lg:grid lg:grid-cols-[minmax(0,2.2fr)_1fr_1fr_1.1fr_0.7fr_auto] lg:gap-4">
+          <div className="hidden border-b border-black/[0.06] px-5 py-3 text-[0.62rem] uppercase tracking-[0.18em] text-[#6f6f6f] lg:grid lg:grid-cols-[minmax(0,2.2fr)_1fr_1fr_1.1fr_0.7fr_auto] lg:gap-4">
             <span>Product</span>
             <span>Price</span>
             <span>Availability</span>
@@ -82,7 +82,7 @@ export default async function AdminProductsPage() {
                     className="grid items-center gap-4 px-4 py-4 sm:px-5 lg:grid-cols-[minmax(0,2.2fr)_1fr_1fr_1.1fr_0.7fr_auto]"
                   >
                     <div className="flex min-w-0 items-center gap-4">
-                      <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[#e7e0d4]">
+                      <div className="relative h-20 w-16 shrink-0 overflow-hidden bg-[#eac5cc]">
                         {product.images[0] ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -91,7 +91,7 @@ export default async function AdminProductsPage() {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center text-[0.6rem] uppercase tracking-[0.14em] text-[#8a8174]">
+                          <div className="flex h-full items-center justify-center text-[0.6rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
                             No img
                           </div>
                         )}
@@ -100,7 +100,7 @@ export default async function AdminProductsPage() {
                         <p className="truncate font-[family-name:var(--font-display)] text-2xl tracking-wide">
                           {product.name}
                         </p>
-                        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[#8a8174]">
+                        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[#6f6f6f]">
                           {product.category?.name ?? "Uncategorized"}
                           {!preorder ? ` · ${stockTotal} in stock` : ""}
                         </p>
@@ -108,7 +108,7 @@ export default async function AdminProductsPage() {
                     </div>
 
                     <div className="text-sm">
-                      <span className="lg:hidden text-[0.62rem] uppercase tracking-[0.14em] text-[#8a8174]">
+                      <span className="lg:hidden text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
                         Price ·{" "}
                       </span>
                       <span className="font-medium">{formatGhs(product.price)}</span>
@@ -127,7 +127,7 @@ export default async function AdminProductsPage() {
                         {availabilityLabel(product.availability)}
                       </span>
                       {preorder && product.preorderEta && (
-                        <p className="mt-1.5 text-xs text-[#8a8174]">
+                        <p className="mt-1.5 text-xs text-[#6f6f6f]">
                           {product.preorderEta}
                         </p>
                       )}
@@ -150,14 +150,14 @@ export default async function AdminProductsPage() {
                       )}
                     </div>
 
-                    <div className="text-sm text-[#5c5348]">
-                      <span className="lg:hidden text-[0.62rem] uppercase tracking-[0.14em] text-[#8a8174]">
+                    <div className="text-sm text-[#6f6f6f]">
+                      <span className="lg:hidden text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
                         Variants ·{" "}
                       </span>
                       {product._count.variants}
                     </div>
 
-                    <div className="hidden text-right text-[0.65rem] uppercase tracking-[0.16em] text-[#8a8174] lg:block">
+                    <div className="hidden text-right text-[0.65rem] uppercase tracking-[0.16em] text-[#6f6f6f] lg:block">
                       Edit →
                     </div>
                   </Link>

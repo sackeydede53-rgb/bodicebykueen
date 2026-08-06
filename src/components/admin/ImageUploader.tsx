@@ -73,7 +73,7 @@ export function ImageUploader({ name = "imageUrls", defaultUrls = [] }: Props) {
         {uploading ? "Uploading…" : "Upload images"}
       </button>
 
-      <p className="text-xs text-[#8a8174]">
+      <p className="text-xs text-[#6f6f6f]">
         JPG, PNG, or WebP. You can select multiple files. On Vercel, keep each
         file under about 4.5&nbsp;MB.
       </p>
@@ -85,7 +85,7 @@ export function ImageUploader({ name = "imageUrls", defaultUrls = [] }: Props) {
           {urls.map((url, index) => (
             <div
               key={`${url}-${index}`}
-              className="group relative aspect-[3/4] overflow-hidden bg-[#e7e0d4]"
+              className="group relative aspect-[3/4] overflow-hidden bg-[#eac5cc]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="h-full w-full object-cover" />

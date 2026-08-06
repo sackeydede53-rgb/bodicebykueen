@@ -34,9 +34,9 @@ function LoginForm() {
     <div className="admin-shell flex min-h-screen items-center justify-center px-6">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-md border border-[#d8d0c4] bg-white p-8 shadow-sm"
+        className="w-full max-w-md border border-[#d0d0d0] bg-white p-8 shadow-sm"
       >
-        <p className="text-[0.7rem] uppercase tracking-[0.22em] text-[#8a8174]">
+        <p className="text-[0.7rem] uppercase tracking-[0.22em] text-[#6f6f6f]">
           Bodice by Kueen
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl">

@@ -15,7 +15,7 @@ export default async function NewProductPage() {
       <h1 className="font-[family-name:var(--font-display)] text-4xl">
         New product
       </h1>
-      <form action={createProduct} className="mt-8 space-y-5 border border-[#d8d0c4] bg-white p-6">
+      <form action={createProduct} className="mt-8 space-y-5 border border-[#d0d0d0] bg-white p-6">
         <Field label="Name" name="name" required />
         <div>
           <label className="label" htmlFor="description">

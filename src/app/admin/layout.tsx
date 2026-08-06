@@ -20,7 +20,7 @@ export default async function AdminLayout({
             className="pointer-events-none absolute inset-0 opacity-40"
             style={{
               background:
-                "radial-gradient(ellipse at 20% 0%, rgba(212,196,168,0.22), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(184,160,122,0.12), transparent 45%)",
+                "radial-gradient(ellipse at 20% 0%, rgba(215,177,183,0.45), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(234,197,204,0.3), transparent 45%)",
             }}
           />
           <div className="relative flex h-full flex-col px-6 py-8">
@@ -76,7 +76,7 @@ export default async function AdminLayout({
                 <div className="font-[family-name:var(--font-display)] text-2xl tracking-[0.06em]">
                   Bodice
                 </div>
-                <p className="text-[0.6rem] uppercase tracking-[0.28em] text-[#8a8174]">
+                <p className="text-[0.6rem] uppercase tracking-[0.28em] text-[#6f6f6f]">
                   Admin
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default async function AdminLayout({
               >
                 <button
                   type="submit"
-                  className="text-[0.65rem] uppercase tracking-[0.16em] text-[#8a8174]"
+                  className="text-[0.65rem] uppercase tracking-[0.16em] text-[#6f6f6f]"
                 >
                   Sign out
                 </button>

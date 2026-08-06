@@ -21,7 +21,7 @@ export default async function HomePage() {
     <>
       {/* Campaign hero inspired by the Dribbble fashion concept */}
       <section className="relative overflow-hidden pt-20 md:pt-24">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,196,168,0.12),transparent_45%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(215,177,183,0.35),transparent_45%)]" />
 
         <div className="relative mx-auto max-w-7xl px-5 md:px-10">
           <div className="relative grid min-h-[72vh] overflow-hidden bg-ink-soft md:grid-cols-[1fr_1.15fr_1fr]">
@@ -37,7 +37,7 @@ export default async function HomePage() {
                 className="absolute inset-0 md:hidden"
                 style={{
                   backgroundImage:
-                    "linear-gradient(180deg, rgba(12,11,10,0.55), rgba(12,11,10,0.82)), url('/uploads/hero-left.png')",
+                    "linear-gradient(180deg, rgba(111,111,111,0.45), rgba(215,177,183,0.72)), url('/uploads/hero-left.png')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -91,7 +91,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/shop"
-              className="border border-champagne bg-champagne px-4 py-2 text-[0.65rem] uppercase tracking-[0.16em] text-ink"
+              className="border border-champagne bg-champagne px-4 py-2 text-[0.65rem] uppercase tracking-[0.16em] text-[var(--on-accent)]"
             >
               All
             </Link>

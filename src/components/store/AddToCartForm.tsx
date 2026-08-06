@@ -85,7 +85,7 @@ export function AddToCartForm({
                   }}
                   className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] ${
                     color === c
-                      ? "border-champagne bg-champagne text-ink"
+                      ? "border-champagne bg-champagne text-[var(--on-accent)]"
                       : "border-champagne/30 text-champagne"
                   }`}
                 >
@@ -117,7 +117,7 @@ export function AddToCartForm({
                 onClick={() => setSize(v.size)}
                 className={`min-w-12 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] disabled:opacity-30 ${
                   size === v.size
-                    ? "border-champagne bg-champagne text-ink"
+                    ? "border-champagne bg-champagne text-[var(--on-accent)]"
                     : "border-champagne/30 text-champagne"
                 }`}
               >

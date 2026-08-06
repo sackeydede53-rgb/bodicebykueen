@@ -53,7 +53,7 @@ export default async function EditProductPage({ params }: Props) {
 
       <form
         action={updateWithId}
-        className="max-w-2xl space-y-5 border border-[#d8d0c4] bg-white p-6"
+        className="max-w-2xl space-y-5 border border-[#d0d0d0] bg-white p-6"
       >
         <Field label="Name" name="name" defaultValue={product.name} required />
         <div>
@@ -133,8 +133,8 @@ export default async function EditProductPage({ params }: Props) {
         </button>
       </form>
 
-      <section className="border border-[#d8d0c4] bg-white p-6">
-        <h2 className="text-sm uppercase tracking-[0.16em] text-[#8a8174]">
+      <section className="border border-[#d0d0d0] bg-white p-6">
+        <h2 className="text-sm uppercase tracking-[0.16em] text-[#6f6f6f]">
           Colours & sizes
         </h2>
         <ul className="mt-4 space-y-3">
@@ -177,7 +177,7 @@ export default async function EditProductPage({ params }: Props) {
 
         <div className="mt-8 space-y-6 border-t border-[#eee7dc] pt-6">
           <div>
-            <h3 className="text-xs uppercase tracking-[0.14em] text-[#8a8174]">
+            <h3 className="text-xs uppercase tracking-[0.14em] text-[#6f6f6f]">
               Add a colour (all sizes)
             </h3>
             <form
@@ -200,7 +200,7 @@ export default async function EditProductPage({ params }: Props) {
           </div>
 
           <div>
-            <h3 className="text-xs uppercase tracking-[0.14em] text-[#8a8174]">
+            <h3 className="text-xs uppercase tracking-[0.14em] text-[#6f6f6f]">
               Add one size / colour variant
             </h3>
             <form

@@ -19,7 +19,7 @@ export default async function CategoriesPage() {
 
       <form
         action={createCategory}
-        className="mt-8 grid max-w-xl gap-3 border border-[#d8d0c4] bg-white p-6"
+        className="mt-8 grid max-w-xl gap-3 border border-[#d0d0d0] bg-white p-6"
       >
         <div>
           <label className="label" htmlFor="name">
@@ -42,11 +42,11 @@ export default async function CategoriesPage() {
         {categories.map((cat) => (
           <li
             key={cat.id}
-            className="flex items-center justify-between gap-4 border border-[#d8d0c4] bg-white px-4 py-3 text-sm"
+            className="flex items-center justify-between gap-4 border border-[#d0d0d0] bg-white px-4 py-3 text-sm"
           >
             <div>
               <p className="font-medium">{cat.name}</p>
-              <p className="text-[#8a8174]">
+              <p className="text-[#6f6f6f]">
                 {cat.slug} · {cat._count.products} products
               </p>
             </div>
