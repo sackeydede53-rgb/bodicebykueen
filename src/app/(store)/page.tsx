@@ -155,8 +155,7 @@ export default async function HomePage() {
           <div
             className="min-h-[420px] bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=1400&q=80')",
+              backgroundImage: "url('/uploads/story-band.png')",
             }}
           />
           <div className="flex flex-col justify-center px-6 py-16 md:px-14 md:py-20">
