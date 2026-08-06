@@ -44,8 +44,8 @@ export default function CheckoutPage() {
       customerName: String(form.get("customerName") || ""),
       customerEmail: String(form.get("customerEmail") || ""),
       customerPhone: String(form.get("customerPhone") || ""),
+      callNumber: String(form.get("callNumber") || ""),
       addressLine1: String(form.get("addressLine1") || ""),
-      addressLine2: String(form.get("addressLine2") || ""),
       city: String(form.get("city") || ""),
       region: String(form.get("region") || ""),
       notes: String(form.get("notes") || ""),
@@ -108,19 +108,19 @@ export default function CheckoutPage() {
             </label>
             <input id="customerName" name="customerName" required className="input" />
           </div>
+          <div>
+            <label className="label" htmlFor="customerEmail">
+              Email
+            </label>
+            <input
+              id="customerEmail"
+              name="customerEmail"
+              type="email"
+              required
+              className="input"
+            />
+          </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label className="label" htmlFor="customerEmail">
-                Email
-              </label>
-              <input
-                id="customerEmail"
-                name="customerEmail"
-                type="email"
-                required
-                className="input"
-              />
-            </div>
             <div>
               <label className="label" htmlFor="customerPhone">
                 Phone (MoMo)
@@ -133,18 +133,24 @@ export default function CheckoutPage() {
                 className="input"
               />
             </div>
+            <div>
+              <label className="label" htmlFor="callNumber">
+                Call number
+              </label>
+              <input
+                id="callNumber"
+                name="callNumber"
+                required
+                placeholder="020XXXXXXX"
+                className="input"
+              />
+            </div>
           </div>
           <div>
             <label className="label" htmlFor="addressLine1">
               Delivery address
             </label>
             <input id="addressLine1" name="addressLine1" required className="input" />
-          </div>
-          <div>
-            <label className="label" htmlFor="addressLine2">
-              Address line 2
-            </label>
-            <input id="addressLine2" name="addressLine2" className="input" />
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             <div>

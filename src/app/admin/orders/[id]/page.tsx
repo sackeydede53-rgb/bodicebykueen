@@ -45,11 +45,9 @@ export default async function OrderDetailPage({ params }: Props) {
         <div className="mt-3 space-y-1">
           <p>{order.customerName}</p>
           <p>{order.customerEmail}</p>
-          <p>{order.customerPhone}</p>
-          <p>
-            {order.addressLine1}
-            {order.addressLine2 ? `, ${order.addressLine2}` : ""}
-          </p>
+          <p>MoMo: {order.customerPhone}</p>
+          {order.addressLine2 && <p>Call: {order.addressLine2}</p>}
+          <p>{order.addressLine1}</p>
           <p>
             {order.city}
             {order.region ? `, ${order.region}` : ""}
