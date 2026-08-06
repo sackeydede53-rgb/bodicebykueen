@@ -52,6 +52,8 @@ model Product {
   slug         String        @unique
   description  String
   price        Float
+  /// What you paid / spent per unit to make or buy this piece
+  costPrice    Float         @default(0)
   compareAt    Float?
   categoryId   String?
   category     Category?     @relation(fields: [categoryId], references: [id])
@@ -132,9 +134,23 @@ model OrderItem {
   size        String
   color       String
   unitPrice   Float
+  /// Cost snapshot at sale time for profit tracking
+  unitCost    Float          @default(0)
   quantity    Int
   isPreorder  Boolean        @default(false)
   preorderEta String?
+}
+
+/// Money spent on goods / atelier costs (fabric, packaging, supplier runs, etc.)
+model InventoryExpense {
+  id        String   @id @default(cuid())
+  title     String
+  amount    Float
+  category  String   @default("OTHER")
+  note      String?
+  spentAt   DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Payment {

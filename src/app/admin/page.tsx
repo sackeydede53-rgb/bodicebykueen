@@ -44,10 +44,18 @@ export default async function AdminDashboardPage() {
         </h1>
       </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-3">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Orders" value={String(orderCount)} />
         <Stat label="Products" value={String(productCount)} />
         <Stat label="Open pre-orders" value={String(preorderOrders)} />
+        <Link href="/admin/inventory" className="admin-panel block p-6 transition hover:border-[#d7b1b7]">
+          <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
+            Inventory
+          </p>
+          <p className="mt-3 font-[family-name:var(--font-display)] text-2xl tracking-wide">
+            Costs & profit →
+          </p>
+        </Link>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

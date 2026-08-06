@@ -29,7 +29,20 @@ export default async function NewProductPage() {
             className="input"
           />
         </div>
-        <Field label="Price (GHS)" name="price" type="number" step="0.01" required />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Sell price (GHS)" name="price" type="number" step="0.01" required />
+          <Field
+            label="Cost price (GHS)"
+            name="costPrice"
+            type="number"
+            step="0.01"
+            defaultValue="0"
+            placeholder="What you paid per piece"
+          />
+        </div>
+        <p className="-mt-2 text-xs text-[#6f6f6f]">
+          Cost price powers inventory profit tracking (money in stock vs profit to make).
+        </p>
         <div>
           <label className="label" htmlFor="categoryId">
             Category

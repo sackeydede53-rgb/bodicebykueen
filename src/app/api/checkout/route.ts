@@ -119,6 +119,7 @@ export async function POST(req: Request) {
             size: line.variant.size,
             color: line.variant.color,
             unitPrice: line.product.price,
+            unitCost: line.product.costPrice || 0,
             quantity: line.quantity,
             isPreorder: line.isPreorder,
             preorderEta: line.product.preorderEta,

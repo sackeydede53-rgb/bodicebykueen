@@ -12,6 +12,7 @@ export async function createProduct(formData: FormData) {
   const name = String(formData.get("name") || "").trim();
   const description = String(formData.get("description") || "").trim();
   const price = Number(formData.get("price") || 0);
+  const costPrice = Math.max(0, Number(formData.get("costPrice") || 0));
   const categoryId = String(formData.get("categoryId") || "") || null;
   const availability = String(formData.get("availability") || "AVAILABLE") as
     | "AVAILABLE"
@@ -54,6 +55,7 @@ export async function createProduct(formData: FormData) {
       slug,
       description,
       price,
+      costPrice,
       categoryId,
       availability,
       preorderEta: availability === "PREORDER" ? preorderEta : null,
@@ -79,6 +81,7 @@ export async function createProduct(formData: FormData) {
   });
 
   revalidatePath("/admin/products");
+  revalidatePath("/admin/inventory");
   revalidatePath("/shop");
   redirect(`/admin/products/${product.id}`);
 }
@@ -89,6 +92,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   const name = String(formData.get("name") || "").trim();
   const description = String(formData.get("description") || "").trim();
   const price = Number(formData.get("price") || 0);
+  const costPrice = Math.max(0, Number(formData.get("costPrice") || 0));
   const categoryId = String(formData.get("categoryId") || "") || null;
   const availability = String(formData.get("availability") || "AVAILABLE") as
     | "AVAILABLE"
@@ -108,6 +112,7 @@ export async function updateProduct(productId: string, formData: FormData) {
       name,
       description,
       price,
+      costPrice,
       categoryId,
       availability,
       preorderEta: availability === "PREORDER" ? preorderEta : null,
@@ -129,6 +134,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   }
 
   revalidatePath("/admin/products");
+  revalidatePath("/admin/inventory");
   revalidatePath(`/admin/products/${productId}`);
   revalidatePath("/shop");
   redirect(`/admin/products/${productId}`);
@@ -151,6 +157,8 @@ export async function updateVariantStock(formData: FormData) {
     data: { stock },
   });
   revalidatePath(`/admin/products/${variant.productId}`);
+  revalidatePath("/admin/inventory");
+  revalidatePath("/admin");
 }
 
 export async function addVariant(formData: FormData) {

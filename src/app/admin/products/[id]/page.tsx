@@ -69,14 +69,26 @@ export default async function EditProductPage({ params }: Props) {
             defaultValue={product.description}
           />
         </div>
-        <Field
-          label="Price (GHS)"
-          name="price"
-          type="number"
-          step="0.01"
-          defaultValue={String(product.price)}
-          required
-        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Sell price (GHS)"
+            name="price"
+            type="number"
+            step="0.01"
+            defaultValue={String(product.price)}
+            required
+          />
+          <Field
+            label="Cost price (GHS)"
+            name="costPrice"
+            type="number"
+            step="0.01"
+            defaultValue={String(product.costPrice ?? 0)}
+          />
+        </div>
+        <p className="-mt-2 text-xs text-[#6f6f6f]">
+          Cost = money you spent per piece. Used on the Inventory page for profit.
+        </p>
         <div>
           <label className="label" htmlFor="categoryId">
             Category
