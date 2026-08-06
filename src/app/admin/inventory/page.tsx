@@ -11,21 +11,26 @@ import {
 import {
   addInventoryExpense,
   deleteInventoryExpense,
-  quickUpdateStock,
-  updateProductCost,
 } from "./actions";
+import { InventoryProductCard } from "@/components/admin/InventoryProductCard";
 
 export const dynamic = "force-dynamic";
 
 const PAID_STATUSES = ["PAID", "PROCESSING", "SHIPPED", "DELIVERED"] as const;
 
 type Props = {
-  searchParams: Promise<{ ok?: string; error?: string }>;
+  searchParams: Promise<{
+    ok?: string;
+    error?: string;
+    focus?: string;
+    view?: string;
+  }>;
 };
 
 export default async function InventoryPage({ searchParams }: Props) {
   await requireAdmin();
   const params = await searchParams;
+  const view = params.view || "all";
 
   const [products, expenses, paidOrders] = await Promise.all([
     prisma.product.findMany({
@@ -61,12 +66,13 @@ export default async function InventoryPage({ searchParams }: Props) {
     const potential = retailValue - costValue;
     const margin = marginPercent(sell, cost);
     const health = stockHealth(stock, isPreorder);
+    const needsCost = !isPreorder && cost <= 0 && stock > 0;
 
     if (!isPreorder) {
       unitsInStock += stock;
       inventoryCost += costValue;
       inventoryRetail += retailValue;
-      if (cost <= 0 && stock > 0) missingCostCount += 1;
+      if (needsCost) missingCostCount += 1;
     }
 
     return {
@@ -80,6 +86,7 @@ export default async function InventoryPage({ searchParams }: Props) {
       margin,
       health,
       isPreorder,
+      needsCost,
     };
   });
 
@@ -98,36 +105,28 @@ export default async function InventoryPage({ searchParams }: Props) {
   const realizedGross = salesRevenue - salesCogs;
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
   const netAfterExpenses = realizedGross - totalExpenses;
-  const avgMargin =
-    rows.filter((r) => !r.isPreorder && r.sell > 0).length > 0
-      ? rows
-          .filter((r) => !r.isPreorder && r.sell > 0)
-          .reduce((sum, r) => sum + r.margin, 0) /
-        rows.filter((r) => !r.isPreorder && r.sell > 0).length
-      : 0;
 
-  const topPotential = [...rows]
-    .filter((r) => !r.isPreorder && r.potential > 0)
-    .sort((a, b) => b.potential - a.potential)
-    .slice(0, 5);
-
-  const lowStock = rows
-    .filter((r) => r.health === "low" || r.health === "out")
-    .sort((a, b) => a.stock - b.stock);
+  const filtered = rows.filter((row) => {
+    if (view === "needs-cost") return row.needsCost;
+    if (view === "low") return row.health === "low" || row.health === "out";
+    if (view === "ready") return !row.isPreorder && row.stock > 0;
+    return true;
+  });
 
   return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#6f6f6f]">
-            Atelier ledger
+            Your stock book
           </p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-5xl tracking-[0.02em]">
             Inventory
           </h1>
-          <p className="mt-2 max-w-xl text-sm text-[#6f6f6f]">
-            Track money tied up in stock, profit waiting on the rack, and cash
-            spent on goods.
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#6f6f6f]">
+            For every piece: enter <strong className="font-semibold text-[#3a3a3a]">what you paid</strong>,
+            keep <strong className="font-semibold text-[#3a3a3a]">how many you have</strong>, and see{" "}
+            <strong className="font-semibold text-[#3a3a3a]">profit</strong> instantly.
           </p>
         </div>
         <Link href="/admin/products/new" className="admin-btn">
@@ -135,6 +134,11 @@ export default async function InventoryPage({ searchParams }: Props) {
         </Link>
       </div>
 
+      {params.ok === "saved" && (
+        <p className="border border-[#3d5a45]/25 bg-[#3d5a45]/10 px-4 py-3 text-sm text-success">
+          Saved. Your totals below are updated.
+        </p>
+      )}
       {params.ok === "expense" && (
         <p className="border border-[#3d5a45]/25 bg-[#3d5a45]/10 px-4 py-3 text-sm text-success">
           Expense logged.
@@ -145,268 +149,162 @@ export default async function InventoryPage({ searchParams }: Props) {
           Enter a title and amount for the expense.
         </p>
       )}
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat
-          label="Money in stock"
-          value={formatGhs(inventoryCost)}
-          hint={`${unitsInStock} units at cost`}
-        />
-        <Stat
-          label="Retail value"
-          value={formatGhs(inventoryRetail)}
-          hint="If everything sells at list price"
-        />
-        <Stat
-          label="Profit to be made"
-          value={formatGhs(potentialProfit)}
-          hint={`Avg margin ${avgMargin.toFixed(0)}%`}
-          accent
-        />
-        <Stat
-          label="Net after expenses"
-          value={formatGhs(netAfterExpenses)}
-          hint={`${formatGhs(realizedGross)} sales profit − ${formatGhs(totalExpenses)} spent`}
-        />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Stat
-          label="Sales revenue (paid)"
-          value={formatGhs(salesRevenue)}
-          hint={`${soldUnits} units sold`}
-        />
-        <Stat
-          label="Cost of goods sold"
-          value={formatGhs(salesCogs)}
-          hint="From cost snapshots on orders"
-        />
-        <Stat
-          label="Expenses logged"
-          value={formatGhs(totalExpenses)}
-          hint={`${expenses.length} entries`}
-        />
-      </div>
-
-      {missingCostCount > 0 && (
-        <p className="border border-[#d7b1b7] bg-[#f8f2f3] px-4 py-3 text-sm text-[#6b3f48]">
-          {missingCostCount} in-stock product
-          {missingCostCount === 1 ? "" : "s"} still have cost set to GH₵0.
-          Add costs below so profit figures stay accurate.
+      {params.error === "price" && (
+        <p className="border border-[#c46b6b]/40 bg-[#c46b6b]/10 px-4 py-3 text-sm text-danger">
+          Sell price is required.
         </p>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="admin-panel p-6">
-          <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
-            Biggest profit sitting in stock
-          </h2>
-          <ul className="mt-5 divide-y divide-black/[0.05]">
-            {topPotential.length === 0 && (
-              <li className="py-3 text-sm text-[#6f6f6f]">
-                Add cost prices to see potential profit.
-              </li>
-            )}
-            {topPotential.map((row) => (
-              <li
-                key={row.product.id}
-                className="flex items-center justify-between gap-3 py-3 text-sm"
-              >
-                <div>
-                  <Link
-                    href={`/admin/products/${row.product.id}`}
-                    className="font-medium hover:underline"
-                  >
-                    {row.product.name}
-                  </Link>
-                  <p className="mt-0.5 text-xs text-[#6f6f6f]">
-                    {row.stock} units · {row.margin.toFixed(0)}% margin
-                  </p>
-                </div>
-                <p className="font-medium text-[#3d5a45]">
-                  {formatGhs(row.potential)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
+      {/* Plain-language money story */}
+      <section className="admin-panel p-6 md:p-8">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl">
+          In simple words
+        </h2>
+        <ol className="mt-4 grid gap-4 md:grid-cols-3">
+          <li className="rounded-2xl bg-[#f8f2f3] p-4">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#6b3f48]">
+              1 · Money you put in
+            </p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">
+              {formatGhs(inventoryCost)}
+            </p>
+            <p className="mt-2 text-sm text-[#6f6f6f]">
+              Cost of all {unitsInStock} pieces you currently have. This only
+              works after you fill in each product&apos;s cost.
+            </p>
+          </li>
+          <li className="rounded-2xl bg-[#f8f2f3] p-4">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#6b3f48]">
+              2 · If customers buy everything
+            </p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">
+              {formatGhs(inventoryRetail)}
+            </p>
+            <p className="mt-2 text-sm text-[#6f6f6f]">
+              Total money you would collect at today&apos;s sell prices.
+            </p>
+          </li>
+          <li className="rounded-2xl border border-[#d7b1b7] bg-white p-4">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[#6b3f48]">
+              3 · Profit waiting for you
+            </p>
+            <p className="mt-2 font-[family-name:var(--font-display)] text-3xl text-[#3d5a45]">
+              {formatGhs(potentialProfit)}
+            </p>
+            <p className="mt-2 text-sm text-[#6f6f6f]">
+              Step 2 minus step 1. Your earn if every in-stock piece sells.
+            </p>
+          </li>
+        </ol>
 
-        <section className="admin-panel p-6">
-          <h2 className="text-[0.68rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
-            Stock attention
-          </h2>
-          <ul className="mt-5 divide-y divide-black/[0.05]">
-            {lowStock.length === 0 && (
-              <li className="py-3 text-sm text-[#6f6f6f]">
-                No low or empty stock right now.
-              </li>
-            )}
-            {lowStock.map((row) => (
-              <li
-                key={row.product.id}
-                className="flex items-center justify-between gap-3 py-3 text-sm"
-              >
-                <div>
-                  <Link
-                    href={`/admin/products/${row.product.id}`}
-                    className="font-medium hover:underline"
-                  >
-                    {row.product.name}
-                  </Link>
-                  <p className="mt-0.5 text-xs text-[#6f6f6f]">
-                    Cost tied up: {formatGhs(row.costValue)}
-                  </p>
-                </div>
-                <HealthBadge health={row.health} stock={row.stock} />
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <MiniStat
+            label="Already sold (paid orders)"
+            value={formatGhs(salesRevenue)}
+            hint={`${soldUnits} pieces · profit so far ${formatGhs(realizedGross)}`}
+          />
+          <MiniStat
+            label="Extra money spent on goods"
+            value={formatGhs(totalExpenses)}
+            hint="Fabric, packaging, supplier trips (log below)"
+          />
+          <MiniStat
+            label="Left after those expenses"
+            value={formatGhs(netAfterExpenses)}
+            hint="Sales profit minus logged expenses"
+          />
+        </div>
+      </section>
+
+      {missingCostCount > 0 && (
+        <div className="flex flex-col gap-3 rounded-2xl border border-[#d7b1b7] bg-[#f8f2f3] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-[#6b3f48]">
+            <strong>{missingCostCount}</strong> product
+            {missingCostCount === 1 ? "" : "s"} still need a cost amount.
+            Until you add them, “money in stock” stays near GH₵0 and profit
+            looks like 100%.
+          </p>
+          <Link
+            href="/admin/inventory?view=needs-cost"
+            className="admin-btn shrink-0"
+          >
+            Show products needing cost
+          </Link>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        {[
+          { id: "all", label: `All (${rows.length})` },
+          { id: "needs-cost", label: `Need cost (${missingCostCount})` },
+          {
+            id: "low",
+            label: `Low / out (${rows.filter((r) => r.health === "low" || r.health === "out").length})`,
+          },
+          {
+            id: "ready",
+            label: `In stock (${rows.filter((r) => !r.isPreorder && r.stock > 0).length})`,
+          },
+        ].map((tab) => (
+          <Link
+            key={tab.id}
+            href={`/admin/inventory?view=${tab.id}`}
+            className={`border px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.14em] transition ${
+              view === tab.id
+                ? "border-[#d7b1b7] bg-[#d7b1b7] text-white"
+                : "border-[#d0d0d0] bg-white text-[#6f6f6f]"
+            }`}
+          >
+            {tab.label}
+          </Link>
+        ))}
       </div>
 
-      <section className="admin-panel overflow-hidden">
-        <div className="border-b border-[#d0d0d0] px-6 py-5">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl">
-            Stock & margins
+      <section className="space-y-4">
+        <div>
+          <h2 className="font-[family-name:var(--font-display)] text-3xl">
+            Edit each product
           </h2>
           <p className="mt-1 text-sm text-[#6f6f6f]">
-            Set cost per piece, then watch profit-to-be-made update live.
+            Change the amounts, update sizes, then press{" "}
+            <strong className="text-[#3a3a3a]">Save this product</strong>.
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-[#f8f2f3] text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
-              <tr>
-                <th className="px-4 py-3 font-medium">Product</th>
-                <th className="px-4 py-3 font-medium">Stock</th>
-                <th className="px-4 py-3 font-medium">Cost / unit</th>
-                <th className="px-4 py-3 font-medium">Sell</th>
-                <th className="px-4 py-3 font-medium">Margin</th>
-                <th className="px-4 py-3 font-medium">Money in</th>
-                <th className="px-4 py-3 font-medium">Profit ahead</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-black/[0.05]">
-              {rows.map((row) => (
-                <tr key={row.product.id} className="align-top">
-                  <td className="px-4 py-4">
-                    <Link
-                      href={`/admin/products/${row.product.id}`}
-                      className="font-medium hover:underline"
-                    >
-                      {row.product.name}
-                    </Link>
-                    <p className="mt-0.5 text-xs text-[#6f6f6f]">
-                      {row.product.category?.name ?? "Uncategorized"}
-                    </p>
-                  </td>
-                  <td className="px-4 py-4">
-                    {row.isPreorder ? (
-                      <span className="text-[#6f6f6f]">Pre-order</span>
-                    ) : (
-                      <div className="space-y-2">
-                        <p>{row.stock} units</p>
-                        <div className="space-y-1">
-                          {row.product.variants.slice(0, 6).map((v) => (
-                            <form
-                              key={v.id}
-                              action={quickUpdateStock}
-                              className="flex items-center gap-1"
-                            >
-                              <input type="hidden" name="variantId" value={v.id} />
-                              <span className="w-16 truncate text-[0.65rem] text-[#6f6f6f]">
-                                {v.size}/{v.color}
-                              </span>
-                              <input
-                                name="stock"
-                                type="number"
-                                min={0}
-                                defaultValue={v.stock}
-                                className="input !w-14 !px-1 !py-1 text-xs"
-                              />
-                              <button
-                                type="submit"
-                                className="text-[0.58rem] uppercase tracking-[0.1em] text-[#6b3f48] underline"
-                              >
-                                Set
-                              </button>
-                            </form>
-                          ))}
-                          {row.product.variants.length > 6 && (
-                            <p className="text-[0.65rem] text-[#6f6f6f]">
-                              +{row.product.variants.length - 6} more on product
-                              page
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-4 py-4">
-                    <form action={updateProductCost} className="flex items-center gap-1">
-                      <input
-                        type="hidden"
-                        name="productId"
-                        value={row.product.id}
-                      />
-                      <input
-                        name="costPrice"
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        defaultValue={String(row.cost)}
-                        className="input !w-24 !px-2 !py-1 text-xs"
-                      />
-                      <button
-                        type="submit"
-                        className="text-[0.58rem] uppercase tracking-[0.1em] text-[#6b3f48] underline"
-                      >
-                        Save
-                      </button>
-                    </form>
-                  </td>
-                  <td className="px-4 py-4">{formatGhs(row.sell)}</td>
-                  <td className="px-4 py-4">
-                    {row.isPreorder ? "—" : `${row.margin.toFixed(0)}%`}
-                  </td>
-                  <td className="px-4 py-4">
-                    {row.isPreorder ? "—" : formatGhs(row.costValue)}
-                  </td>
-                  <td className="px-4 py-4 font-medium text-[#3d5a45]">
-                    {row.isPreorder ? "—" : formatGhs(row.potential)}
-                  </td>
-                  <td className="px-4 py-4">
-                    <HealthBadge health={row.health} stock={row.stock} />
-                  </td>
-                </tr>
-              ))}
-              {rows.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-[#6f6f6f]">
-                    No products yet.{" "}
-                    <Link href="/admin/products/new" className="underline">
-                      Add your first piece
-                    </Link>
-                    .
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        {filtered.length === 0 ? (
+          <div className="admin-panel px-6 py-12 text-center text-sm text-[#6f6f6f]">
+            Nothing in this filter.{" "}
+            <Link href="/admin/inventory" className="underline">
+              Show all
+            </Link>
+          </div>
+        ) : (
+          filtered.map((row) => (
+            <InventoryProductCard
+              key={row.product.id}
+              productId={row.product.id}
+              name={row.product.name}
+              categoryName={row.product.category?.name}
+              imageUrl={row.product.images[0]?.url}
+              costPrice={row.cost}
+              sellPrice={row.sell}
+              isPreorder={row.isPreorder}
+              variants={row.product.variants}
+              highlight={params.focus === row.product.id}
+              needsCost={row.needsCost}
+            />
+          ))
+        )}
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
         <form action={addInventoryExpense} className="admin-panel space-y-4 p-6">
           <div>
             <h2 className="font-[family-name:var(--font-display)] text-2xl">
-              Log money spent
+              Log money spent on goods
             </h2>
             <p className="mt-1 text-sm text-[#6f6f6f]">
-              Fabric runs, packaging, supplier trips — anything that bought the
-              goods.
+              Example: fabric from market, zippers, packaging bags, transport.
             </p>
           </div>
           <div>
@@ -440,7 +338,12 @@ export default async function InventoryPage({ searchParams }: Props) {
               <label className="label" htmlFor="category">
                 Category
               </label>
-              <select id="category" name="category" className="input" defaultValue="FABRIC">
+              <select
+                id="category"
+                name="category"
+                className="input"
+                defaultValue="FABRIC"
+              >
                 {EXPENSE_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
                     {c.label}
@@ -465,7 +368,12 @@ export default async function InventoryPage({ searchParams }: Props) {
             <label className="label" htmlFor="note">
               Note (optional)
             </label>
-            <input id="note" name="note" className="input" placeholder="Vendor, colours, etc." />
+            <input
+              id="note"
+              name="note"
+              className="input"
+              placeholder="Vendor, colours, etc."
+            />
           </div>
           <button type="submit" className="admin-btn">
             Add expense
@@ -516,49 +424,24 @@ export default async function InventoryPage({ searchParams }: Props) {
   );
 }
 
-function Stat({
+function MiniStat({
   label,
   value,
   hint,
-  accent = false,
 }: {
   label: string;
   value: string;
-  hint?: string;
-  accent?: boolean;
+  hint: string;
 }) {
   return (
-    <div className={`admin-panel p-6 ${accent ? "border-[#d7b1b7] bg-[#f8f2f3]" : ""}`}>
-      <p className="text-[0.65rem] uppercase tracking-[0.18em] text-[#6f6f6f]">
+    <div className="rounded-xl border border-[#e8d5d8] px-4 py-3">
+      <p className="text-[0.62rem] uppercase tracking-[0.14em] text-[#6f6f6f]">
         {label}
       </p>
-      <p className="mt-3 font-[family-name:var(--font-display)] text-3xl tracking-wide md:text-4xl">
+      <p className="mt-1 font-[family-name:var(--font-display)] text-2xl">
         {value}
       </p>
-      {hint && <p className="mt-2 text-xs text-[#6f6f6f]">{hint}</p>}
+      <p className="mt-1 text-xs text-[#6f6f6f]">{hint}</p>
     </div>
-  );
-}
-
-function HealthBadge({
-  health,
-  stock,
-}: {
-  health: "preorder" | "out" | "low" | "ok";
-  stock: number;
-}) {
-  if (health === "preorder") {
-    return <span className="admin-badge admin-badge-soft">Pre-order</span>;
-  }
-  if (health === "out") {
-    return <span className="admin-badge admin-badge-ink">Out of stock</span>;
-  }
-  if (health === "low") {
-    return (
-      <span className="admin-badge admin-badge-champagne">{stock} left</span>
-    );
-  }
-  return (
-    <span className="admin-badge admin-badge-success">{stock} in stock</span>
   );
 }

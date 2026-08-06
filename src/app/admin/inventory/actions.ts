@@ -5,36 +5,50 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 
-export async function updateProductCost(formData: FormData) {
+function revalidateInventory(productId?: string) {
+  revalidatePath("/admin/inventory");
+  revalidatePath("/admin/products");
+  revalidatePath("/admin");
+  if (productId) revalidatePath(`/admin/products/${productId}`);
+}
+
+/** Save cost, sell price, and every size/colour stock for one product. */
+export async function saveInventoryProduct(formData: FormData) {
   await requireAdmin();
   const productId = String(formData.get("productId") || "");
+  if (!productId) redirect("/admin/inventory?error=save");
+
   const costPrice = Math.max(0, Number(formData.get("costPrice") || 0));
-  if (!productId) return;
+  const price = Math.max(0, Number(formData.get("price") || 0));
+
+  if (!price) {
+    redirect(`/admin/inventory?error=price&focus=${productId}`);
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: { variants: true },
+  });
+  if (!product) redirect("/admin/inventory?error=save");
 
   await prisma.product.update({
     where: { id: productId },
-    data: { costPrice },
+    data: { costPrice, price },
   });
 
-  revalidatePath("/admin/inventory");
-  revalidatePath(`/admin/products/${productId}`);
-  revalidatePath("/admin/products");
-}
+  for (const variant of product.variants) {
+    const raw = formData.get(`stock_${variant.id}`);
+    if (raw == null || raw === "") continue;
+    const stock = Math.max(0, Math.floor(Number(raw)));
+    if (Number.isNaN(stock)) continue;
+    await prisma.productVariant.update({
+      where: { id: variant.id },
+      data: { stock },
+    });
+  }
 
-export async function quickUpdateStock(formData: FormData) {
-  await requireAdmin();
-  const variantId = String(formData.get("variantId") || "");
-  const stock = Math.max(0, Math.floor(Number(formData.get("stock") || 0)));
-  if (!variantId) return;
-
-  const variant = await prisma.productVariant.update({
-    where: { id: variantId },
-    data: { stock },
-  });
-
-  revalidatePath("/admin/inventory");
-  revalidatePath(`/admin/products/${variant.productId}`);
-  revalidatePath("/admin");
+  revalidateInventory(productId);
+  redirect(`/admin/inventory?ok=saved&focus=${productId}`);
 }
 
 export async function addInventoryExpense(formData: FormData) {
