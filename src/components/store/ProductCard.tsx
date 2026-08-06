@@ -40,7 +40,7 @@ export function ProductCard({
 
   return (
     <Link href={`/shop/${slug}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden bg-ink-soft">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-ink-soft">
         {current ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -55,7 +55,7 @@ export function ProductCard({
         )}
 
         {availability !== "AVAILABLE" && (
-          <div className="absolute left-3 top-3 bg-ink/75 px-2.5 py-1 text-[0.58rem] uppercase tracking-[0.16em] text-champagne backdrop-blur-sm">
+          <div className="absolute left-3 top-3 rounded-full bg-ink/75 px-2.5 py-1 text-[0.58rem] uppercase tracking-[0.16em] text-champagne backdrop-blur-sm">
             {availabilityLabel(availability)}
           </div>
         )}
@@ -69,7 +69,7 @@ export function ProductCard({
                 stopNav(e);
                 setIndex((i) => (i - 1 + slides.length) % slides.length);
               }}
-              className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center border border-champagne/30 bg-ink/65 text-ivory opacity-0 backdrop-blur-sm transition group-hover:opacity-100"
+              className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/45 text-white opacity-100 backdrop-blur-sm transition md:opacity-0 md:group-hover:opacity-100"
             >
               ‹
             </button>
@@ -80,7 +80,7 @@ export function ProductCard({
                 stopNav(e);
                 setIndex((i) => (i + 1) % slides.length);
               }}
-              className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center border border-champagne/30 bg-ink/65 text-ivory opacity-0 backdrop-blur-sm transition group-hover:opacity-100"
+              className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/45 text-white opacity-100 backdrop-blur-sm transition md:opacity-0 md:group-hover:opacity-100"
             >
               ›
             </button>
