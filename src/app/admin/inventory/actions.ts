@@ -9,7 +9,11 @@ function revalidateInventory(productId?: string) {
   revalidatePath("/admin/inventory");
   revalidatePath("/admin/products");
   revalidatePath("/admin");
-  if (productId) revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/shop");
+  if (productId) {
+    revalidatePath(`/admin/products/${productId}`);
+    revalidatePath("/shop", "layout");
+  }
 }
 
 /** Save cost, sell price, and every size/colour stock for one product. */
@@ -22,7 +26,7 @@ export async function saveInventoryProduct(formData: FormData) {
   const price = Math.max(0, Number(formData.get("price") || 0));
 
   if (!price) {
-    redirect(`/admin/inventory?error=price&focus=${productId}`);
+    redirect(`/admin/inventory?edit=${productId}&error=price`);
   }
 
   const product = await prisma.product.findUnique({
@@ -31,24 +35,51 @@ export async function saveInventoryProduct(formData: FormData) {
   });
   if (!product) redirect("/admin/inventory?error=save");
 
-  await prisma.product.update({
-    where: { id: productId },
-    data: { costPrice, price },
-  });
+  const stockUpdates: { id: string; stock: number }[] = [];
 
-  for (const variant of product.variants) {
-    const raw = formData.get(`stock_${variant.id}`);
-    if (raw == null || raw === "") continue;
-    const stock = Math.max(0, Math.floor(Number(raw)));
+  for (const [key, value] of formData.entries()) {
+    if (!key.startsWith("stock_")) continue;
+    const variantId = key.slice("stock_".length);
+    if (!variantId) continue;
+    const belongs = product.variants.some((v) => v.id === variantId);
+    if (!belongs) continue;
+    const stock = Math.max(0, Math.floor(Number(String(value))));
     if (Number.isNaN(stock)) continue;
-    await prisma.productVariant.update({
-      where: { id: variant.id },
-      data: { stock },
-    });
+    stockUpdates.push({ id: variantId, stock });
   }
 
+  await prisma.$transaction([
+    prisma.product.update({
+      where: { id: productId },
+      data: {
+        costPrice,
+        price,
+        // bump updatedAt so “just saved” ordering works
+        updatedAt: new Date(),
+      },
+    }),
+    ...stockUpdates.map((u) =>
+      prisma.productVariant.update({
+        where: { id: u.id },
+        data: { stock: u.stock },
+      }),
+    ),
+  ]);
+
   revalidateInventory(productId);
-  redirect(`/admin/inventory?ok=saved&focus=${productId}`);
+  // Keep this product open; confirmation renders under the editor
+  redirect(`/admin/inventory?edit=${productId}&ok=saved`);
+}
+
+/** Reset every product cost to 0 and clear expense log. */
+export async function zeroAllInventoryMoney() {
+  await requireAdmin();
+  await prisma.$transaction([
+    prisma.product.updateMany({ data: { costPrice: 0 } }),
+    prisma.inventoryExpense.deleteMany({}),
+  ]);
+  revalidateInventory();
+  redirect("/admin/inventory?ok=zeroed");
 }
 
 export async function addInventoryExpense(formData: FormData) {
