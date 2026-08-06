@@ -84,10 +84,10 @@ export function AddToCartForm({
                     if (next) setSize(next.size);
                     setAdded(false);
                   }}
-                  className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] ${
+                  className={`inline-flex items-center gap-2 border px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] ${
                     color === c
-                      ? "border-champagne bg-champagne text-[var(--on-accent)]"
-                      : "border-champagne/30 text-champagne"
+                      ? "border-label bg-champagne text-[var(--on-accent)]"
+                      : "border-label/40 bg-ink text-label"
                   }`}
                 >
                   {hex && (
@@ -119,10 +119,10 @@ export function AddToCartForm({
                   setSize(v.size);
                   setAdded(false);
                 }}
-                className={`min-w-12 border px-3 py-1.5 text-[0.7rem] uppercase tracking-[0.14em] disabled:opacity-30 ${
+                className={`min-w-12 border px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] disabled:opacity-30 ${
                   size === v.size
-                    ? "border-champagne bg-champagne text-[var(--on-accent)]"
-                    : "border-champagne/30 text-champagne"
+                    ? "border-label bg-champagne text-[var(--on-accent)]"
+                    : "border-label/40 bg-ink text-label"
                 }`}
               >
                 {v.size}
