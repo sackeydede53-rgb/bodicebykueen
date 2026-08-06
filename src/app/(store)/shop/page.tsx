@@ -42,17 +42,12 @@ export default async function ShopPage({
             ],
           }
         : {}),
-      ...(params.size
-        ? { variants: { some: { size: params.size } } }
-        : {}),
     },
     include: {
       images: { orderBy: { sortOrder: "asc" } },
     },
     orderBy: { createdAt: "desc" },
   });
-
-  const sizes = ["XS", "S", "M", "L", "XL"];
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-24 md:px-10">
@@ -70,7 +65,10 @@ export default async function ShopPage({
       </div>
 
       <div className="mb-10 flex flex-wrap gap-3">
-        <FilterChip href="/shop" active={!params.category && !params.availability && !params.size}>
+        <FilterChip
+          href="/shop"
+          active={!params.category && !params.availability}
+        >
           All
         </FilterChip>
         {categories.map((cat) => (
@@ -94,15 +92,6 @@ export default async function ShopPage({
         >
           Pre-order
         </FilterChip>
-        {sizes.map((size) => (
-          <FilterChip
-            key={size}
-            href={`/shop?size=${size}${params.category ? `&category=${params.category}` : ""}`}
-            active={params.size === size}
-          >
-            {size}
-          </FilterChip>
-        ))}
       </div>
 
       {products.length === 0 ? (
