@@ -50,20 +50,6 @@ export function CategoryMosaic({ categories }: Props) {
           className="min-h-[160px] md:min-h-[200px]"
         />
       ))}
-
-      <CategoryCard
-        category={{
-          id: "preorder",
-          name: "Pre-order",
-          slug: "__preorder__",
-          count: 0,
-          imageUrl: "/uploads/story-band.png",
-        }}
-        href="/shop?availability=PREORDER"
-        subtitle="Special pieces"
-        className="min-h-[160px] md:min-h-[200px]"
-        accent
-      />
     </div>
   );
 }
@@ -72,29 +58,17 @@ function CategoryCard({
   category,
   className = "",
   large = false,
-  accent = false,
-  href,
-  subtitle,
 }: {
   category: CategoryTile;
   className?: string;
   large?: boolean;
-  accent?: boolean;
-  href?: string;
-  subtitle?: string;
 }) {
-  const link =
-    href ??
-    (category.slug === "__preorder__"
-      ? "/shop?availability=PREORDER"
-      : `/shop?category=${category.slug}`);
   const countLabel =
-    subtitle ??
-    (category.count === 1 ? "1 piece" : `${category.count} pieces`);
+    category.count === 1 ? "1 piece" : `${category.count} pieces`;
 
   return (
     <Link
-      href={link}
+      href={`/shop?category=${category.slug}`}
       className={`group relative block overflow-hidden rounded-2xl ${className}`}
     >
       {category.imageUrl ? (
@@ -108,9 +82,8 @@ function CategoryCard({
         <div
           className="absolute inset-0"
           style={{
-            background: accent
-              ? "linear-gradient(160deg, #eac5cc 0%, #d7b1b7 55%, #c49aa3 100%)"
-              : "linear-gradient(160deg, #f8f2f3 0%, #eac5cc 50%, #d7b1b7 100%)",
+            background:
+              "linear-gradient(160deg, #f8f2f3 0%, #eac5cc 50%, #d7b1b7 100%)",
           }}
         />
       )}
