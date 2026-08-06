@@ -38,16 +38,41 @@ export function AddToCartForm({
     () => Array.from(new Set(variants.map((v) => v.color))),
     [variants],
   );
-  const [color, setColor] = useState(colors[0] ?? "Black");
+
+  const colourStock = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const v of variants) {
+      map.set(v.color, (map.get(v.color) ?? 0) + v.stock);
+    }
+    return map;
+  }, [variants]);
+
+  const productOutOfStock =
+    !isPreorder &&
+    (variants.length === 0 || variants.every((v) => v.stock <= 0));
+
+  const firstAvailableColor =
+    colors.find((c) => (colourStock.get(c) ?? 0) > 0) ?? colors[0] ?? "Black";
+
+  const [color, setColor] = useState(firstAvailableColor);
   const sizesForColor = variants.filter((v) => v.color === color);
-  const [size, setSize] = useState(sizesForColor[0]?.size ?? "");
+  const [size, setSize] = useState(
+    () =>
+      sizesForColor.find((v) => isPreorder || v.stock > 0)?.size ??
+      sizesForColor[0]?.size ??
+      "",
+  );
   const [added, setAdded] = useState(false);
 
   const selected =
     variants.find((v) => v.color === color && v.size === size) ??
     sizesForColor[0];
 
-  const canPurchase = !!selected && (isPreorder || selected.stock > 0);
+  const colorOutOfStock = !isPreorder && (colourStock.get(color) ?? 0) <= 0;
+  const canPurchase =
+    !productOutOfStock &&
+    !!selected &&
+    (isPreorder || selected.stock > 0);
 
   function handleAdd() {
     if (!selected || !canPurchase) return;
@@ -66,6 +91,23 @@ export function AddToCartForm({
     setAdded(true);
   }
 
+  if (productOutOfStock) {
+    return (
+      <div className="rounded-2xl border-2 border-[#6b3f48] bg-white px-4 py-6 text-center">
+        <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#6b3f48]">
+          Out of stock
+        </p>
+        <p className="mt-2 text-sm text-[#3a3a3a]">
+          This piece is currently sold out. Check back soon or browse other
+          styles.
+        </p>
+        <Link href="/shop" className="btn-primary mt-5 inline-flex">
+          Continue shopping
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {colors.length > 0 && (
@@ -74,13 +116,17 @@ export function AddToCartForm({
           <div className="flex flex-wrap gap-2">
             {colors.map((c) => {
               const hex = getColorHex(c);
+              const soldOut = !isPreorder && (colourStock.get(c) ?? 0) <= 0;
               return (
                 <button
                   key={c}
                   type="button"
                   onClick={() => {
                     setColor(c);
-                    const next = variants.find((v) => v.color === c);
+                    const nextSizes = variants.filter((v) => v.color === c);
+                    const next =
+                      nextSizes.find((v) => isPreorder || v.stock > 0) ??
+                      nextSizes[0];
                     if (next) setSize(next.size);
                     setAdded(false);
                   }}
@@ -88,7 +134,7 @@ export function AddToCartForm({
                     color === c
                       ? "border-[#6b3f48] bg-[#6b3f48] text-white"
                       : "border-[#6b3f48] bg-white text-[#3a3a3a]"
-                  }`}
+                  } ${soldOut ? "opacity-55" : ""}`}
                 >
                   {hex && (
                     <span
@@ -98,10 +144,16 @@ export function AddToCartForm({
                     />
                   )}
                   {c}
+                  {soldOut ? " · Sold out" : ""}
                 </button>
               );
             })}
           </div>
+          {colorOutOfStock && (
+            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#6b3f48]">
+              This colour is out of stock
+            </p>
+          )}
         </div>
       )}
 
@@ -119,13 +171,18 @@ export function AddToCartForm({
                   setSize(v.size);
                   setAdded(false);
                 }}
-                className={`min-w-12 border-2 px-3 py-2 text-[0.8rem] font-bold uppercase tracking-[0.12em] disabled:opacity-35 ${
-                  size === v.size
+                className={`min-w-12 border-2 px-3 py-2 text-[0.8rem] font-bold uppercase tracking-[0.12em] disabled:cursor-not-allowed disabled:bg-[#f0e4e7] disabled:text-[#9a7a80] ${
+                  size === v.size && !disabled
                     ? "border-[#6b3f48] bg-[#6b3f48] text-white"
                     : "border-[#6b3f48] bg-white text-[#3a3a3a]"
                 }`}
               >
                 {v.size}
+                {disabled ? (
+                  <span className="mt-0.5 block text-[0.55rem] tracking-[0.08em]">
+                    Out
+                  </span>
+                ) : null}
               </button>
             );
           })}
@@ -139,7 +196,11 @@ export function AddToCartForm({
           disabled={!canPurchase}
           className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {isPreorder ? "Pre-order" : "Add to cart"}
+          {!canPurchase
+            ? "Out of stock"
+            : isPreorder
+              ? "Pre-order"
+              : "Add to cart"}
         </button>
       ) : (
         <div className="space-y-3 rounded-2xl border border-champagne/25 bg-ink-soft/40 p-4">
@@ -160,8 +221,10 @@ export function AddToCartForm({
         </div>
       )}
 
-      {!canPurchase && (
-        <p className="text-center text-sm text-stone">Currently unavailable</p>
+      {!canPurchase && !colorOutOfStock && (
+        <p className="text-center text-sm font-semibold text-[#6b3f48]">
+          Selected size is out of stock
+        </p>
       )}
     </div>
   );

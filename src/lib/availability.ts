@@ -19,3 +19,13 @@ export function isPreorder(value: AvailabilityValue | string) {
 export function requiresStock(value: AvailabilityValue | string) {
   return value !== "PREORDER";
 }
+
+/** Ready-to-wear product with no sellable stock left */
+export function isProductOutOfStock(
+  availability: AvailabilityValue | string,
+  variants: { stock: number }[],
+) {
+  if (isPreorder(availability)) return false;
+  if (!variants.length) return true;
+  return variants.every((v) => v.stock <= 0);
+}

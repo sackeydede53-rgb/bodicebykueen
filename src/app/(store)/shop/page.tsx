@@ -3,13 +3,13 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { ShopSearch } from "@/components/store/ShopSearch";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { isProductOutOfStock } from "@/lib/availability";
 
 export const dynamic = "force-dynamic";
 
 type SearchParams = Promise<{
   category?: string;
   availability?: string;
-  size?: string;
   q?: string;
 }>;
 
@@ -45,6 +45,7 @@ export default async function ShopPage({
     },
     include: {
       images: { orderBy: { sortOrder: "asc" } },
+      variants: { select: { stock: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -108,6 +109,10 @@ export default async function ShopPage({
               imageUrls={product.images.map((img) => img.url)}
               availability={product.availability}
               preorderEta={product.preorderEta}
+              outOfStock={isProductOutOfStock(
+                product.availability,
+                product.variants,
+              )}
             />
           ))}
         </div>

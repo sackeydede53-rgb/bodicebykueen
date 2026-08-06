@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/store/ProductCard";
 import { CategoryMosaic } from "@/components/store/CategoryMosaic";
+import { isProductOutOfStock } from "@/lib/availability";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,10 @@ export default async function HomePage() {
   const [featured, categories] = await Promise.all([
     prisma.product.findMany({
       where: { published: true, featured: true },
-      include: { images: { orderBy: { sortOrder: "asc" } } },
+      include: {
+        images: { orderBy: { sortOrder: "asc" } },
+        variants: { select: { stock: true } },
+      },
       orderBy: { createdAt: "desc" },
       take: 4,
     }),
@@ -150,6 +154,10 @@ export default async function HomePage() {
                 imageUrls={product.images.map((img) => img.url)}
                 availability={product.availability}
                 preorderEta={product.preorderEta}
+                outOfStock={isProductOutOfStock(
+                  product.availability,
+                  product.variants,
+                )}
               />
             ))}
           </div>

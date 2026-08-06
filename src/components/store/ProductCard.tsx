@@ -13,6 +13,7 @@ type ProductCardProps = {
   imageUrls?: string[];
   availability: "AVAILABLE" | "IN_STOCK" | "PREORDER";
   preorderEta?: string | null;
+  outOfStock?: boolean;
 };
 
 export function ProductCard({
@@ -23,6 +24,7 @@ export function ProductCard({
   imageUrls,
   availability,
   preorderEta,
+  outOfStock = false,
 }: ProductCardProps) {
   const slides = (imageUrls?.filter(Boolean).length
     ? imageUrls.filter(Boolean)
@@ -46,7 +48,10 @@ export function ProductCard({
           <img
             src={current}
             alt={name}
-            className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+            className={cn(
+              "h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]",
+              outOfStock && "opacity-55",
+            )}
           />
         ) : (
           <div className="flex h-full items-center justify-center text-stone">
@@ -54,10 +59,16 @@ export function ProductCard({
           </div>
         )}
 
-        {availability !== "AVAILABLE" && (
-          <div className="absolute left-3 top-3 rounded-full bg-ink/75 px-2.5 py-1 text-[0.58rem] uppercase tracking-[0.16em] text-champagne backdrop-blur-sm">
-            {availabilityLabel(availability)}
+        {outOfStock ? (
+          <div className="absolute left-3 top-3 rounded-full bg-[#6b3f48] px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-white">
+            Out of stock
           </div>
+        ) : (
+          availability !== "AVAILABLE" && (
+            <div className="absolute left-3 top-3 rounded-full bg-ink/75 px-2.5 py-1 text-[0.58rem] uppercase tracking-[0.16em] text-champagne backdrop-blur-sm">
+              {availabilityLabel(availability)}
+            </div>
+          )
         )}
 
         {canSlide && (
@@ -106,7 +117,7 @@ export function ProductCard({
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent p-4 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
           <span className="inline-flex border border-champagne/50 bg-ink/50 px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em] text-ivory backdrop-blur-sm">
-            View piece →
+            {outOfStock ? "View details →" : "View piece →"}
           </span>
         </div>
       </div>
@@ -115,8 +126,15 @@ export function ProductCard({
           <h3 className="font-[family-name:var(--font-display)] text-xl tracking-wide text-ivory transition group-hover:text-champagne">
             {name}
           </h3>
-          {availability === "PREORDER" && preorderEta && (
-            <p className="mt-1 text-xs text-stone">Est. {preorderEta}</p>
+          {outOfStock ? (
+            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#6b3f48]">
+              Out of stock
+            </p>
+          ) : (
+            availability === "PREORDER" &&
+            preorderEta && (
+              <p className="mt-1 text-xs text-stone">Est. {preorderEta}</p>
+            )
           )}
         </div>
         <p className="shrink-0 pt-1 text-sm font-semibold text-label">

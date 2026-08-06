@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { availabilityLabel, isPreorder } from "@/lib/availability";
+import {
+  availabilityLabel,
+  isPreorder,
+  isProductOutOfStock,
+} from "@/lib/availability";
 import { formatGhs } from "@/lib/utils";
 import { AddToCartForm } from "@/components/store/AddToCartForm";
 import { ProductImageSlider } from "@/components/store/ProductImageSlider";
@@ -24,6 +28,10 @@ export default async function ProductPage({ params }: Props) {
   if (!product || !product.published) notFound();
 
   const preorder = isPreorder(product.availability);
+  const outOfStock = isProductOutOfStock(
+    product.availability,
+    product.variants,
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-24 md:px-10">
@@ -38,8 +46,10 @@ export default async function ProductPage({ params }: Props) {
         <ProductImageSlider images={product.images} productName={product.name} />
 
         <div>
-          <p className="text-[0.7rem] uppercase tracking-[0.22em] text-champagne">
-            {availabilityLabel(product.availability)}
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-label">
+            {outOfStock
+              ? "Out of stock"
+              : availabilityLabel(product.availability)}
             {product.category ? ` · ${product.category.name}` : ""}
           </p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-5xl text-ivory">
