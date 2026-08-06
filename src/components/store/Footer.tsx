@@ -12,7 +12,7 @@ export function Footer() {
             by Kueen
           </div>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-stone">
-            Elevated tops and bodysuits ready to wear — plus a wide pre-order
+            Trendy tops, unique pieces, ready to wear — plus a wide pre-order
             catalogue for special pieces.
           </p>
         </div>
