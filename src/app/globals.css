@@ -14,6 +14,8 @@ html[data-theme="light"] {
   --ink-soft: #eac5cc;
   --champagne: #d7b1b7;
   --champagne-deep: #c49aa3;
+  /* Soft light pink for labels on dusty-rose surfaces (high visibility) */
+  --pink-light: #fff5f7;
   --ivory: #3a3a3a;
   --ivory-muted: #454545;
   --stone: #4a4a4a;
@@ -41,6 +43,7 @@ html[data-theme="dark"] {
   --ink-soft: #3a3235;
   --champagne: #d7b1b7;
   --champagne-deep: #eac5cc;
+  --pink-light: #ffe8ee;
   --ivory: #f5f0f1;
   --ivory-muted: #eac5cc;
   --stone: #d0d0d0;
@@ -63,6 +66,7 @@ html[data-theme="dark"] {
   --color-ink-soft: var(--ink-soft);
   --color-champagne: var(--champagne);
   --color-champagne-deep: var(--champagne-deep);
+  --color-pink-light: var(--pink-light);
   --color-ivory: var(--ivory);
   --color-ivory-muted: var(--ivory-muted);
   --color-stone: var(--stone);

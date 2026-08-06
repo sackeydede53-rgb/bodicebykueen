@@ -43,12 +43,12 @@ export default async function HomePage() {
                 }}
               />
               <div className="relative z-10">
-                <p className="fade-up text-[0.68rem] uppercase tracking-[0.38em] text-champagne">
+                <p className="fade-up text-[0.68rem] uppercase tracking-[0.38em] text-pink-light drop-shadow-sm">
                   — New collection —
                 </p>
                 <h1 className="fade-up-delay mt-5 font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-[0.04em] text-ivory md:text-6xl lg:text-7xl">
                   Bodice
-                  <span className="mt-3 block text-2xl tracking-[0.28em] text-champagne md:text-3xl">
+                  <span className="mt-3 block text-2xl tracking-[0.28em] text-pink-light drop-shadow-sm md:text-3xl">
                     by Kueen
                   </span>
                 </h1>
