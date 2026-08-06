@@ -1,60 +1,60 @@
 @import "tailwindcss";
 
-/* Brand palette: Dusty Pink + Gray (deepened for contrast)
-   Accent #C49AA3 · Soft #D7B1B7 · Border #B8B0B0 · Text #4A4A4A */
+/* Brand palette: Dusty Pink + Gray
+   Soft page #F8F2F3 / #EAC5CC · Accent #D7B1B7 · Deeper text #3A3A3A */
 
 :root,
 html[data-theme="light"] {
-  --dusty-pink: #c49aa3;
-  --light-pink: #d7b1b7;
-  --light-gray: #b8b0b0;
-  --dark-gray: #4a4a4a;
+  --dusty-pink: #d7b1b7;
+  --light-pink: #eac5cc;
+  --light-gray: #d0d0d0;
+  --dark-gray: #3a3a3a;
 
-  --ink: #e4c4cb;
-  --ink-soft: #d7b1b7;
-  --champagne: #c49aa3;
-  --champagne-deep: #b48490;
-  --ivory: #4a4a4a;
-  --ivory-muted: #555555;
-  --stone: #5c5555;
+  --ink: #f8f2f3;
+  --ink-soft: #eac5cc;
+  --champagne: #d7b1b7;
+  --champagne-deep: #c49aa3;
+  --ivory: #3a3a3a;
+  --ivory-muted: #454545;
+  --stone: #4a4a4a;
   --on-accent: #ffffff;
   --danger: #8b3a3a;
   --success: #3d5a45;
-  --background: #e4c4cb;
-  --foreground: #4a4a4a;
-  --ghost-border: rgba(74, 74, 74, 0.35);
-  --ghost-bg: rgba(255, 255, 255, 0.4);
-  --ghost-bg-hover: rgba(255, 255, 255, 0.7);
-  --input-border: #b8b0b0;
-  --grain-a: rgba(196, 154, 163, 0.45);
-  --grain-b: rgba(180, 132, 144, 0.28);
-  --grain-base: linear-gradient(180deg, #e8ccd2 0%, #d7b1b7 48%, #e4c4cb 100%);
+  --background: #f8f2f3;
+  --foreground: #3a3a3a;
+  --ghost-border: rgba(58, 58, 58, 0.28);
+  --ghost-bg: rgba(255, 255, 255, 0.55);
+  --ghost-bg-hover: rgba(255, 255, 255, 0.85);
+  --input-border: #d0d0d0;
+  --grain-a: rgba(215, 177, 183, 0.4);
+  --grain-b: rgba(234, 197, 204, 0.35);
+  --grain-base: linear-gradient(180deg, #f8f2f3 0%, #f0e4e7 48%, #f8f2f3 100%);
 }
 
 html[data-theme="dark"] {
-  --dusty-pink: #c49aa3;
-  --light-pink: #d7b1b7;
-  --light-gray: #b8b0b0;
-  --dark-gray: #4a4a4a;
+  --dusty-pink: #d7b1b7;
+  --light-pink: #eac5cc;
+  --light-gray: #d0d0d0;
+  --dark-gray: #3a3a3a;
 
   --ink: #2a2426;
   --ink-soft: #3a3235;
   --champagne: #d7b1b7;
-  --champagne-deep: #e4c4cb;
+  --champagne-deep: #eac5cc;
   --ivory: #f5f0f1;
-  --ivory-muted: #d7b1b7;
-  --stone: #b8b0b0;
+  --ivory-muted: #eac5cc;
+  --stone: #d0d0d0;
   --on-accent: #2a2426;
   --danger: #c46b6b;
   --success: #6a9a78;
   --background: #2a2426;
   --foreground: #f5f0f1;
-  --ghost-border: rgba(215, 177, 183, 0.45);
+  --ghost-border: rgba(234, 197, 204, 0.45);
   --ghost-bg: rgba(42, 36, 38, 0.4);
   --ghost-bg-hover: rgba(42, 36, 38, 0.65);
-  --input-border: rgba(196, 154, 163, 0.4);
-  --grain-a: rgba(196, 154, 163, 0.22);
-  --grain-b: rgba(215, 177, 183, 0.12);
+  --input-border: rgba(215, 177, 183, 0.35);
+  --grain-a: rgba(215, 177, 183, 0.18);
+  --grain-b: rgba(234, 197, 204, 0.1);
   --grain-base: linear-gradient(180deg, #2a2426 0%, #352e31 50%, #2a2426 100%);
 }
 
@@ -207,26 +207,26 @@ a {
 
 .admin-shell {
   background:
-    radial-gradient(ellipse at top right, rgba(196, 154, 163, 0.45), transparent 42%),
-    linear-gradient(160deg, #e4c4cb 0%, #d7b1b7 48%, #e4c4cb 100%);
-  color: #4a4a4a;
+    radial-gradient(ellipse at top right, rgba(215, 177, 183, 0.35), transparent 42%),
+    linear-gradient(160deg, #f8f2f3 0%, #eac5cc 48%, #f8f2f3 100%);
+  color: #3a3a3a;
 }
 
 .admin-shell .input {
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #b8b0b0;
-  color: #4a4a4a;
+  border: 1px solid #d0d0d0;
+  color: #3a3a3a;
 }
 
 .admin-shell .label {
-  color: #5c5555;
+  color: #4a4a4a;
 }
 
 .admin-panel {
-  border: 1px solid #b8b0b0;
+  border: 1px solid #d0d0d0;
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(10px);
-  box-shadow: 0 18px 40px rgba(74, 74, 74, 0.1);
+  box-shadow: 0 18px 40px rgba(58, 58, 58, 0.08);
 }
 
 .admin-badge {
@@ -239,18 +239,18 @@ a {
 }
 
 .admin-badge-ink {
-  background: #4a4a4a;
+  background: #3a3a3a;
   color: #ffffff;
 }
 
 .admin-badge-champagne {
-  background: rgba(196, 154, 163, 0.4);
-  color: #4a4a4a;
+  background: rgba(215, 177, 183, 0.4);
+  color: #3a3a3a;
 }
 
 .admin-badge-soft {
-  background: rgba(184, 176, 176, 0.45);
-  color: #4a4a4a;
+  background: rgba(208, 208, 208, 0.45);
+  color: #3a3a3a;
 }
 
 .admin-badge-success {
@@ -262,7 +262,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #c49aa3;
+  background: #d7b1b7;
   color: #ffffff;
   padding: 0.8rem 1.25rem;
   font-size: 0.68rem;
@@ -272,7 +272,7 @@ a {
 }
 
 .admin-btn:hover {
-  background: #b48490;
+  background: #c49aa3;
   color: #ffffff;
 }
 
