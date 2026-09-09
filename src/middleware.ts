@@ -6,19 +6,17 @@ const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isLogin = req.nextUrl.pathname === "/admin/login";
+  const path = req.nextUrl.pathname;
+  const isPublicAdmin =
+    path === "/admin/login" || path === "/admin/forgot-password";
 
-  if (isLogin && isLoggedIn) {
+  if (isPublicAdmin && isLoggedIn) {
     return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
   }
 
-  if (
-    req.nextUrl.pathname.startsWith("/admin") &&
-    !isLogin &&
-    !isLoggedIn
-  ) {
+  if (path.startsWith("/admin") && !isPublicAdmin && !isLoggedIn) {
     const url = new URL("/admin/login", req.nextUrl.origin);
-    url.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    url.searchParams.set("callbackUrl", path);
     return NextResponse.redirect(url);
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState, Suspense } from "react";
+import Link from "next/link";
 import { SessionProvider, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -42,11 +43,15 @@ function LoginForm() {
         <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl">
           Admin login
         </h1>
-        {(updated === "email" || updated === "profile") && (
+        {(updated === "email" ||
+          updated === "profile" ||
+          updated === "password") && (
           <p className="mt-4 text-sm text-success">
             {updated === "email"
               ? "Login email updated. Sign in with your new email."
-              : "Profile updated. Sign in again to continue."}
+              : updated === "password"
+                ? "Password reset. Sign in with your new password."
+                : "Profile updated. Sign in again to continue."}
           </p>
         )}
         <div className="mt-8 space-y-4">
@@ -79,6 +84,12 @@ function LoginForm() {
           <button type="submit" disabled={loading} className="admin-btn w-full">
             {loading ? "Signing in…" : "Sign in"}
           </button>
+          <Link
+            href="/admin/forgot-password"
+            className="block text-center text-[0.65rem] uppercase tracking-[0.16em] text-[#6f6f6f] underline"
+          >
+            Forgot password?
+          </Link>
         </div>
       </form>
     </div>

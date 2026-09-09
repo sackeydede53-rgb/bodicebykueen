@@ -10,9 +10,11 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request }) {
       const isLoggedIn = !!auth?.user;
-      const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-      const isLogin = request.nextUrl.pathname === "/admin/login";
-      if (isAdminRoute && !isLogin) return isLoggedIn;
+      const path = request.nextUrl.pathname;
+      const isAdminRoute = path.startsWith("/admin");
+      const isPublicAdmin =
+        path === "/admin/login" || path === "/admin/forgot-password";
+      if (isAdminRoute && !isPublicAdmin) return isLoggedIn;
       return true;
     },
     async jwt({ token, user }) {

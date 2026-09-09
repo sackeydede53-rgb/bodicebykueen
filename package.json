@@ -12,6 +12,7 @@
     "db:push": "prisma db push",
     "db:push:turso": "tsx scripts/push-turso.ts",
     "db:inventory:turso": "tsx scripts/apply-inventory-turso.ts",
+    "admin:reset-password": "tsx scripts/reset-admin-password.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force"
   },
